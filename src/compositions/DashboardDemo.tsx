@@ -2,7 +2,9 @@ import React from 'react';
 import { AbsoluteFill, useCurrentFrame, useVideoConfig, spring, interpolate } from 'remotion';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
 import { Badge } from '../components/ui/badge';
-import { ResponsiveContainer, BarChart, Bar, LineChart, Line, PieChart, Pie, Cell, XAxis, YAxis, Tooltip, CartesianGrid } from 'recharts';
+import { AnimatedBarChart } from '../components/AnimatedBarChart';
+import { AnimatedLineChart } from '../components/AnimatedLineChart';
+import { AnimatedPieChart } from '../components/AnimatedPieChart';
 
 interface DashboardDemoProps {
   startFrame: number;
@@ -114,16 +116,14 @@ export const DashboardDemo: React.FC<DashboardDemoProps> = ({ startFrame }) => {
               <div style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '12px' }}>
                 {formatPrice(mockStats.today_revenue)}
               </div>
-              <div style={{ height: '60px' }}>
-                <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={hourlyOccupancy} barSize={8}>
-                    <XAxis dataKey="hour" tick={{ fontSize: 8 }} tickLine={false} axisLine={false} />
-                    <YAxis hide />
-                    <Tooltip />
-                    <Bar dataKey="value" fill="#56ff06" radius={[2, 2, 0, 0]} opacity={0.8} />
-                  </BarChart>
-                </ResponsiveContainer>
-              </div>
+              <AnimatedBarChart
+                data={hourlyOccupancy}
+                xKey="hour"
+                dataKey="value"
+                barSize={8}
+                height={60}
+                delay={10}
+              />
             </CardContent>
           </Card>
 
@@ -136,16 +136,14 @@ export const DashboardDemo: React.FC<DashboardDemoProps> = ({ startFrame }) => {
               <div style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '12px' }}>
                 {mockStats.today_bookings}
               </div>
-              <div style={{ height: '60px' }}>
-                <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={bookingsByDay} barSize={20}>
-                    <XAxis dataKey="name" tick={{ fontSize: 9 }} tickLine={false} axisLine={false} />
-                    <YAxis hide />
-                    <Tooltip />
-                    <Bar dataKey="value" fill="#56ff06" radius={[4, 4, 0, 0]} />
-                  </BarChart>
-                </ResponsiveContainer>
-              </div>
+              <AnimatedBarChart
+                data={bookingsByDay}
+                xKey="name"
+                dataKey="value"
+                barSize={20}
+                height={60}
+                delay={15}
+              />
             </CardContent>
           </Card>
 
@@ -158,28 +156,15 @@ export const DashboardDemo: React.FC<DashboardDemoProps> = ({ startFrame }) => {
               <div style={{ fontSize: '24px', fontWeight: 'bold' }}>
                 {mockStats.unpaid_bookings}
               </div>
-              <div style={{ height: '60px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <ResponsiveContainer width="100%" height="100%">
-                  <PieChart>
-                    <Pie
-                      data={[
-                        { name: 'pendiente', value: mockStats.unpaid_bookings },
-                        { name: 'pagado', value: mockStats.today_bookings - mockStats.unpaid_bookings_today }
-                      ]}
-                      cx="50%"
-                      cy="50%"
-                      innerRadius={20}
-                      outerRadius={28}
-                      paddingAngle={2}
-                      dataKey="value"
-                    >
-                      <Cell fill="#ef4444" />
-                      <Cell fill="#56ff06" />
-                    </Pie>
-                    <Tooltip />
-                  </PieChart>
-                </ResponsiveContainer>
-              </div>
+              <AnimatedPieChart
+                data={[
+                  { name: 'pendiente', value: mockStats.unpaid_bookings },
+                  { name: 'pagado', value: mockStats.today_bookings - mockStats.unpaid_bookings_today }
+                ]}
+                colors={['#ef4444', '#56ff06']}
+                height={60}
+                delay={20}
+              />
             </CardContent>
           </Card>
 
@@ -192,28 +177,15 @@ export const DashboardDemo: React.FC<DashboardDemoProps> = ({ startFrame }) => {
               <div style={{ fontSize: '24px', fontWeight: 'bold' }}>
                 {mockStats.occupancy_rate}%
               </div>
-              <div style={{ height: '60px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <ResponsiveContainer width="100%" height="100%">
-                  <PieChart>
-                    <Pie
-                      data={[
-                        { name: 'ocupado', value: mockStats.occupancy_rate },
-                        { name: 'libre', value: 100 - mockStats.occupancy_rate }
-                      ]}
-                      cx="50%"
-                      cy="50%"
-                      innerRadius={20}
-                      outerRadius={28}
-                      paddingAngle={2}
-                      dataKey="value"
-                    >
-                      <Cell fill="#56ff06" />
-                      <Cell fill="#e5e5e5" />
-                    </Pie>
-                    <Tooltip />
-                  </PieChart>
-                </ResponsiveContainer>
-              </div>
+              <AnimatedPieChart
+                data={[
+                  { name: 'ocupado', value: mockStats.occupancy_rate },
+                  { name: 'libre', value: 100 - mockStats.occupancy_rate }
+                ]}
+                colors={['#56ff06', '#e5e5e5']}
+                height={60}
+                delay={25}
+              />
             </CardContent>
           </Card>
         </div>
@@ -224,38 +196,17 @@ export const DashboardDemo: React.FC<DashboardDemoProps> = ({ startFrame }) => {
             <CardTitle>Rendimiento - Últimos 7 días</CardTitle>
           </CardHeader>
           <CardContent>
-            <div style={{ height: '250px' }}>
-              <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={revenueData}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#e5e5e5" />
-                  <XAxis
-                    dataKey="date"
-                    tickFormatter={(date) => {
-                      const d = new Date(date);
-                      return ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'][d.getDay()];
-                    }}
-                    tick={{ fontSize: 12 }}
-                    tickLine={false}
-                    axisLine={false}
-                  />
-                  <YAxis
-                    tickFormatter={(value) => formatPrice(value)}
-                    tick={{ fontSize: 11 }}
-                    tickLine={false}
-                    axisLine={false}
-                  />
-                  <Tooltip />
-                  <Line
-                    type="monotone"
-                    dataKey="revenue_cents"
-                    stroke="#56ff06"
-                    strokeWidth={3}
-                    dot={{ fill: '#56ff06', r: 4 }}
-                    activeDot={{ r: 6 }}
-                  />
-                </LineChart>
-              </ResponsiveContainer>
-            </div>
+            <AnimatedLineChart
+              data={revenueData}
+              xKey="date"
+              dataKey="revenue_cents"
+              height={250}
+              delay={30}
+              tickFormatter={(date) => {
+                const d = new Date(date);
+                return ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'][d.getDay()];
+              }}
+            />
           </CardContent>
         </Card>
       </div>
