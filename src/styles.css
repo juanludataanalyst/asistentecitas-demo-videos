@@ -1,0 +1,564 @@
+/* Design Tokens */
+@import './styles/design-tokens.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Import Sora and Inter fonts for brand typography */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Sora:wght@400;500;600;700;800&display=swap');
+
+:root {
+  font-family: 'Sora', system-ui, -apple-system, sans-serif;
+}
+
+/* ===== TYPOGRAPHY UTILITIES ===== */
+
+/* Display/Headings: Sora font for titles */
+.font-display {
+  font-family: 'Sora', system-ui, -apple-system, sans-serif;
+}
+
+/* Body/Text: Inter font for paragraphs */
+.font-body {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+/* ===== ELEVATION & DEPTH SYSTEM ===== */
+
+/* Level 0: Flat - Base surface */
+.elevation-0 {
+  box-shadow: 0 0 0 0 transparent;
+}
+
+/* Level 1: Raised - Cards, buttons */
+.elevation-1 {
+  box-shadow:
+    0 1px 3px 0 rgb(0 0 0 / 0.12),
+    0 4px 8px -2px rgb(0 0 0 / 0.15);
+}
+
+/* Level 2: Elevated - Dropdowns, popovers */
+.elevation-2 {
+  box-shadow:
+    0 4px 6px -1px rgb(0 0 0 / 0.15),
+    0 10px 15px -3px rgb(0 0 0 / 0.18),
+    0 0 0 1px rgb(0 0 0 / 0.05);
+}
+
+/* Level 3: Floating - Modals, dialogs */
+.elevation-3 {
+  box-shadow:
+    0 10px 15px -3px rgb(0 0 0 / 0.18),
+    0 20px 25px -5px rgb(0 0 0 / 0.22),
+    0 0 0 1px rgb(0 0 0 / 0.08);
+}
+
+/* Level 4: High - Important modals, overlays */
+.elevation-4 {
+  box-shadow:
+    0 20px 25px -5px rgb(0 0 0 / 0.22),
+    0 30px 40px -10px rgb(0 0 0 / 0.25),
+    0 0 0 1px rgb(0 0 0 / 0.10);
+}
+
+/* Level 5: Maximum - Critical alerts, tooltips */
+.elevation-5 {
+  box-shadow:
+    0 25px 50px -12px rgb(0 0 0 / 0.30),
+    0 0 0 1px rgb(0 0 0 / 0.12);
+}
+
+/* ===== DEPTH WITH BORDERS ===== */
+
+/* Subtle inner shadow for pressed state */
+.depth-pressed {
+  box-shadow:
+    inset 0 2px 4px 0 rgb(0 0 0 / 0.12);
+}
+
+/* Inset for inputs, wells */
+.depth-inset {
+  box-shadow:
+    inset 0 2px 4px 0 rgb(0 0 0 / 0.08),
+    inset 0 0 0 1px rgb(0 0 0 / 0.05);
+}
+
+/* ===== LIGHT & GLOW EFFECTS ===== */
+
+/* Primary glow - for active/focused elements */
+.glow-primary {
+  box-shadow:
+    0 0 0 3px var(--primary),
+    0 0 30px rgb(86 255 6 / 0.50);
+}
+
+/* Subtle glow for hover states */
+.glow-subtle {
+  box-shadow:
+    0 0 0 2px rgb(86 255 6 / 0.20),
+    0 0 20px rgb(86 255 6 / 0.30);
+}
+
+/* Ambient light from top */
+.light-from-top {
+  box-shadow:
+    0 1px 0 0 rgb(255 255 255 / 0.15) inset,
+    0 -1px 0 0 rgb(0 0 0 / 0.05) inset,
+    0 4px 8px 0 rgb(0 0 0 / 0.12);
+}
+
+/* ===== COMBINED ELEVATION CLASSES ===== */
+
+/* Card with elevation and border */
+.card-elevated {
+  box-shadow:
+    0 4px 6px -1px rgb(0 0 0 / 0.15),
+    0 10px 15px -3px rgb(0 0 0 / 0.18);
+  border: 1px solid rgb(0 0 0 / 0.08);
+}
+
+/* Interactive element (button, card) */
+.element-interactive {
+  box-shadow:
+    0 1px 3px 0 rgb(0 0 0 / 0.12),
+    0 4px 8px -2px rgb(0 0 0 / 0.15);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid rgb(0 0 0 / 0.06);
+}
+
+.element-interactive:hover {
+  box-shadow:
+    0 10px 15px -3px rgb(0 0 0 / 0.20),
+    0 20px 25px -5px rgb(0 0 0 / 0.25);
+  transform: translateY(-4px) scale(1.01);
+  border-color: rgb(0 0 0 / 0.10);
+}
+
+.element-interactive:active {
+  box-shadow:
+    0 1px 2px 0 rgb(0 0 0 / 0.15),
+    inset 0 2px 4px 0 rgb(0 0 0 / 0.10);
+  transform: translateY(-1px) scale(0.99);
+}
+
+/* Modal with backdrop glow */
+.modal-elevated {
+  box-shadow:
+    0 20px 25px -5px rgb(0 0 0 / 0.25),
+    0 30px 40px -10px rgb(0 0 0 / 0.30),
+    0 0 0 1px rgb(0 0 0 / 0.10),
+    0 0 100px rgb(86 255 6 / 0.10);
+}
+
+/* Dropdown/menu elevation */
+.dropdown-elevated {
+  box-shadow:
+    0 10px 15px -3px rgb(0 0 0 / 0.20),
+    0 20px 25px -5px rgb(0 0 0 / 0.25);
+}
+
+/* ===== DARK MODE OVERRIDES ===== */
+.dark .elevation-1 {
+  box-shadow:
+    0 1px 3px 0 rgb(0 0 0 / 0.30),
+    0 4px 8px -2px rgb(0 0 0 / 0.35);
+}
+
+.dark .elevation-2 {
+  box-shadow:
+    0 4px 6px -1px rgb(0 0 0 / 0.35),
+    0 10px 15px -3px rgb(0 0 0 / 0.40),
+    0 0 0 1px rgb(255 255 255 / 0.08);
+}
+
+.dark .elevation-3 {
+  box-shadow:
+    0 10px 15px -3px rgb(0 0 0 / 0.40),
+    0 20px 25px -5px rgb(0 0 0 / 0.45),
+    0 0 0 1px rgb(255 255 255 / 0.10);
+}
+
+.dark .elevation-4 {
+  box-shadow:
+    0 20px 25px -5px rgb(0 0 0 / 0.50),
+    0 30px 40px -10px rgb(0 0 0 / 0.55),
+    0 0 0 1px rgb(255 255 255 / 0.12);
+}
+
+.dark .glow-primary {
+  box-shadow:
+    0 0 0 3px var(--primary),
+    0 0 50px rgb(86 255 6 / 0.60);
+}
+
+.dark .element-interactive {
+  border-color: rgb(255 255 255 / 0.10);
+}
+
+.dark .element-interactive:hover {
+  border-color: rgb(255 255 255 / 0.15);
+}
+
+
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+/* Scrollbar estilo shadcn */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: hsl(var(--muted-foreground) / 0.3) transparent;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--muted-foreground) / 0.2);
+  border-radius: 3px;
+  transition: background 0.2s;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--muted-foreground) / 0.4);
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: hsl(var(--muted-foreground) / 0.2);
+  border-radius: 3px;
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--muted-foreground) / 0.4);
+}
+
+.bg-stripes {
+  background-image: repeating-linear-gradient(45deg, #0000 0px, #0000 5px, rgba(0,0,0,0.05) 5px, rgba(0,0,0,0.05) 10px);
+}
+.dark .bg-stripes {
+  background-image: repeating-linear-gradient(45deg, #0000 0px, #0000 5px, rgba(255,255,255,0.05) 5px, rgba(255,255,255,0.05) 10px);
+}
+
+/* Shimmer Animation for Skeleton Loaders */
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+.animate-shimmer {
+  animation: shimmer 2s infinite linear;
+  background: linear-gradient(
+    to right,
+    rgb(226 232 240) 0%,
+    rgb(241 245 249) 20%,
+    rgb(241 245 249) 40%,
+    rgb(226 232 240) 100%
+  );
+  background-size: 1000px 100%;
+}
+
+.dark .animate-shimmer {
+  background: linear-gradient(
+    to right,
+    rgb(39 39 42) 0%,
+    rgb(63 63 70) 20%,
+    rgb(63 63 70) 40%,
+    rgb(39 39 42) 100%
+  );
+  background-size: 1000px 100%;
+}
+
+/* Toast Animations */
+@keyframes toast-in {
+  0% {
+    opacity: 0;
+    transform: translateX(100%) scale(0.9);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+@keyframes toast-out {
+  0% {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(100%) scale(0.9);
+  }
+}
+
+.animate-toast-in {
+  animation: toast-in 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.animate-toast-out {
+  animation: toast-out 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Modal Animations */
+@keyframes modalSlideIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.modal-backdrop {
+  animation: modalFadeIn 0.2s ease-out;
+}
+
+.modal-content {
+  animation: modalSlideIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* 3D Hover Effects - Fresha-inspired */
+.hover-lift {
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease-out;
+}
+
+.hover-lift:hover {
+  transform: translateY(-4px) scale(1.01);
+  box-shadow: 0 12px 24px rgb(0 0 0 / 0.12);
+}
+
+.hover-lift:active {
+  transform: translateY(-2px) scale(0.99);
+  box-shadow: 0 4px 12px rgb(0 0 0 / 0.10);
+}
+
+.hover-tilt {
+  transition: transform 0.3s ease-out;
+  transform-style: preserve-3d;
+}
+
+.hover-tilt:hover {
+  transform: perspective(1000px) rotateX(2deg) rotateY(2deg) scale(1.02);
+}
+
+/* Smooth button press effect */
+.btn-press {
+  transition: all 0.15s ease-out;
+}
+
+.btn-press:hover {
+  transform: translateY(-2px);
+}
+
+.btn-press:active {
+  transform: translateY(0) scale(0.97);
+}
+
+/* Card entrance animation */
+@keyframes cardEntrance {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.card-entrance {
+  animation: cardEntrance 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Smooth fade in */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in {
+  animation: fadeIn 0.5s ease-out;
+}
+
+/* Texture Patterns */
+.bg-texture-dots {
+  background-image: radial-gradient(circle, currentColor 1px, transparent 1px);
+  background-size: 20px 20px;
+  opacity: 0.03;
+}
+
+.bg-texture-grid {
+  background-image:
+    linear-gradient(currentColor 1px, transparent 1px),
+    linear-gradient(90deg, currentColor 1px, transparent 1px);
+  background-size: 40px 40px;
+  opacity: 0.02;
+}
+
+.bg-texture-waves {
+  background-image: url("data:image/svg+xml,%3Csvg width='100' height='20' viewBox='0 0 100 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M21.184 20c.357-.13.72-.264 1.088-.402l1.768-.661C33.64 15.347 39.647 14 50 14c10.271 0 15.362 1.222 24.629 4.928.955.383 1.869.74 2.75 1.072h6.225c-2.51-.73-5.139-1.691-8.233-2.928C65.888 13.278 60.562 12 50 12c-10.626 0-16.855 1.397-26.66 5.063l-1.767.662c-2.475.923-4.66 1.674-6.724 2.275h6.335zm0-20C13.258 2.892 8.077 4 0 4V2c5.744 0 9.951-.574 14.85-2h6.334zM77.38 0C85.239 2.966 90.502 4 100 4V2c-6.842 0-11.386-.542-16.396-2h-6.225zM0 14c8.44 0 13.718-1.21 22.272-4.402l1.768-.661C33.64 5.347 39.647 4 50 4c10.271 0 15.362 1.222 24.629 4.928C84.112 12.722 89.438 14 100 14v-2c-10.271 0-15.362-1.222-24.629-4.928C65.888 3.278 60.562 2 50 2 39.374 2 33.145 3.397 23.34 7.063l-1.767.662C13.223 10.84 8.163 12 0 12v2z' fill='%2313c8ec' fill-opacity='0.05' fill-rule='evenodd'/%3E%3C/svg%3E");
+  background-repeat: repeat-x;
+}
+
+
+
+@layer base {
+  :root {
+    --radius: 0.75rem;  /* 12px - Más redondeo */
+    --background: #fafaf9;  /* Blanco roto cálido */
+    --foreground: #09090b;
+    --card: #ffffff;         /* Blanco puro para las tarjetas */
+    --card-foreground: #09090b;
+    --popover: #ffffff;
+    --popover-foreground: #09090b;
+    --primary: #56ff06;
+    --primary-foreground: #000000;
+    --secondary: #f4f4f5;
+    --secondary-foreground: #18181b;
+    --muted: #f4f4f5;
+    --muted-foreground: #71717a;
+    --accent: #f4f4f5;
+    --accent-foreground: #18181b;
+    --destructive: #ef4444;
+    --destructive-foreground: #fafafa;
+    --border: #e2e8f0;
+    --input: #e2e8f0;
+    --ring: #56ff06;
+    --chart-1: #56ff06;
+    --chart-2: #5ee300;
+    --chart-3: #64c100;
+    --chart-4: #5da300;
+    --chart-5: #518a00;
+
+    --sidebar: var(--background);
+    --sidebar-foreground: var(--foreground);
+    --sidebar-primary: var(--primary);
+    --sidebar-primary-foreground: var(--primary-foreground);
+    --sidebar-accent: var(--accent);
+    --sidebar-accent-foreground: var(--accent-foreground);
+    --sidebar-border: var(--border);
+    --sidebar-ring: var(--ring);
+  }
+
+  .dark {
+    --background: #0a0a0c;  /* Ligeramente más claro que las cards */
+    --foreground: #fafafa;
+    --card: #09090b;        /* Negro puro para las cards */
+    --card-foreground: #fafafa;
+    --popover: #09090b;
+    --popover-foreground: #fafafa;
+    --primary: #56ff06;
+    --primary-foreground: #000000;
+    --secondary: #27272a;
+    --secondary-foreground: #fafafa;
+    --muted: #27272a;
+    --muted-foreground: #a1a1aa;
+    --accent: #27272a;
+    --accent-foreground: #fafafa;
+    --destructive: #7f1d1d;
+    --destructive-foreground: #fafafa;
+    --border: #27272a;
+    --input: #27272a;
+    --ring: #d4d4d8;
+    --chart-1: #56ff06;
+    --chart-2: #5ee300;
+    --chart-3: #64c100;
+    --chart-4: #5da300;
+    --chart-5: #518a00;
+
+    --sidebar: var(--background);
+    --sidebar-foreground: var(--foreground);
+    --sidebar-primary: var(--primary);
+    --sidebar-primary-foreground: var(--primary-foreground);
+    --sidebar-accent: var(--accent);
+    --sidebar-accent-foreground: var(--accent-foreground);
+    --sidebar-border: var(--border);
+    --sidebar-ring: var(--ring);
+  }
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}
+
+@theme inline {
+  --font-sans: 'Inter', sans-serif;
+  --font-serif: 'Source Serif 4', serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 2px);
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
