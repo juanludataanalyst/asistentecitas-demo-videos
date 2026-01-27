@@ -66,13 +66,13 @@ Render specific format:
 
 ```bash
 # Horizontal (1920x1080)
-npx remotion render FullDemo --output=dist/demo.mp4 --codec=h264-ac
+npx remotion render FullDemo --output=dist/demo.mp4 --codec=h264 --width=1920 --height=1080 --fps=30
 
 # Vertical for social media (1080x1920)
-npx remotion render FullDemo --output=dist/demo-vertical.mp4 --size="1080x1920" --codec=h264-ac
+npx remotion render FullDemo --output=dist/demo-vertical.mp4 --codec=h264 --width=1080 --height=1920 --fps=30
 
 # Generate thumbnail
-npx remotion still FullDemo --output=dist/thumb.png
+npx remotion still FullDemo --output=dist/thumb.png --width=1920 --height=1080
 ```
 
 ## Video Specifications

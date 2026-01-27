@@ -14,7 +14,11 @@
     "allowSyntheticDefaultImports": true,
     "noEmit": true,
     "isolatedModules": true,
-    "types": ["@remotion/cli"]
+    "types": ["@remotion/cli"],
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"]
+    }
   },
   "include": ["src", "remotion.config.ts"],
   "exclude": ["node_modules"]

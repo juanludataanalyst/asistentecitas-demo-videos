@@ -1,4 +1,4 @@
-import { Composition, registerRoot } from "remotion";
+import { Composition } from "remotion";
 import { FullDemo } from "./compositions/FullDemo";
 
 export const RemotionRoot: React.FC = () => {
@@ -20,7 +20,7 @@ export const RemotionRoot: React.FC = () => {
       <Composition
         id="FullDemo-Short"
         component={FullDemo}
-        durationInFrames={300}
+        durationInFrames={300} // 10 seconds for testing
         fps={30}
         width={1920}
         height={1080}
@@ -33,5 +33,3 @@ export const RemotionRoot: React.FC = () => {
     </>
   );
 };
-
-registerRoot(RemotionRoot);
