@@ -3,6 +3,11 @@ import { Composition, registerRoot } from "remotion";
 import { DashboardComplete } from "./compositions/DashboardComplete";
 import { IntroDashboard } from "./compositions/IntroDashboard";
 import { CalendarComplete } from "./compositions/CalendarComplete";
+import { WhatsAppChat } from "./compositions/WhatsAppChat";
+import { WhatsAppCita } from "./compositions/WhatsAppCita";
+import { Cliente2Video } from "./compositions/Cliente2Video";
+import { TestVideoTemplate } from "./compositions/TestVideoTemplate";
+import { PromotionalVideo } from "./compositions/PromotionalVideo";
 
 export const RemotionRoot: React.FC = () => {
   return (
@@ -36,6 +41,54 @@ export const RemotionRoot: React.FC = () => {
         defaultProps={{
           startFrame: 0
         }}
+      />
+      <Composition
+        id="WhatsAppChat"
+        component={WhatsAppChat}
+        durationInFrames={300}
+        fps={30}
+        width={1920}
+        height={1080}
+      />
+      <Composition
+        id="WhatsAppCita"
+        component={WhatsAppCita}
+        durationInFrames={300}
+        fps={30}
+        width={1920}
+        height={1080}
+      />
+      <Composition
+        id="Cliente2Video"
+        component={Cliente2Video}
+        durationInFrames={480}
+        fps={30}
+        width={1920}
+        height={1080}
+        defaultProps={{
+          logo: "https://asistentecitas.com/logo.png",
+          video1: "",
+          video2: "",
+          video3: "",
+          soundText: "",
+          soundLogo: ""
+        }}
+      />
+      <Composition
+        id="TestVideoTemplate"
+        component={TestVideoTemplate}
+        durationInFrames={90}
+        fps={30}
+        width={1920}
+        height={1080}
+      />
+      <Composition
+        id="PromotionalVideo"
+        component={PromotionalVideo}
+        durationInFrames={1320}
+        fps={30}
+        width={1920}
+        height={1080}
       />
     </>
   );
