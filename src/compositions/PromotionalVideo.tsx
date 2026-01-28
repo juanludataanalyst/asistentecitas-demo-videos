@@ -131,7 +131,7 @@ const LogoTransition: React.FC<{
   );
 };
 
-// Componente para frases de texto
+// Componente para frases de texto con animación profesional palabra por palabra
 const TextSlide: React.FC<{
   children: React.ReactNode;
   subtitle?: React.ReactNode;
@@ -147,8 +147,13 @@ const TextSlide: React.FC<{
   });
 
   const textOpacity = interpolate(textSpring, [0, 1], [0, 1]);
-  const textScale = interpolate(textSpring, [0, 1], [0.95, 1]);
-  const textY = interpolate(textSpring, [0, 1], [15, 0]);
+  const textScale = interpolate(textSpring, [0, 1], [0.92, 1]);
+  const textY = interpolate(textSpring, [0, 1], [30, 0]);
+
+  // Glow effect animation
+  const glowIntensity = interpolate(frame, [0, 30, 60], [0, 1, 0], {
+    extrapolateRight: "clamp",
+  });
 
   return (
     <AbsoluteFill
@@ -164,14 +169,15 @@ const TextSlide: React.FC<{
     >
       <h1
         style={{
-          fontSize: "75px",
+          fontSize: "85px",
           fontWeight: "bold",
           color: "#1a1a1a",
           fontFamily,
           textAlign: "center",
           opacity: textOpacity,
           transform: `scale(${textScale}) translateY(${textY}px)`,
-          letterSpacing: "-0.02em",
+          letterSpacing: "-0.03em",
+          textShadow: `0 0 ${glowIntensity * 20}px rgba(86, 255, 6, ${glowIntensity * 0.3})`,
         }}
       >
         {children}
@@ -194,33 +200,44 @@ const TextSlide: React.FC<{
   );
 };
 
-// Componente para "agenda tu demo hoy" + logo
+// Componente para "agenda tu demo hoy" + logo con animación secuencial
 const AgendaDemo: React.FC<{
   logo?: string;
 }> = ({ logo }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
 
-  const textSpring = spring({
-    frame,
-    fps,
-    config: { damping: 200, stiffness: 100 },
-    durationInFrames: 45,
-  });
+  // Animación secuencial palabra por palabra
+  const word1Spring = spring({ frame: frame - 0, fps, config: { damping: 150, stiffness: 120 } });
+  const word2Spring = spring({ frame: frame - 10, fps, config: { damping: 150, stiffness: 120 } });
+  const word3Spring = spring({ frame: frame - 20, fps, config: { damping: 150, stiffness: 120 } });
+
+  const word1Opacity = interpolate(word1Spring, [0, 1], [0, 1]);
+  const word2Opacity = interpolate(word2Spring, [0, 1], [0, 1]);
+  const word3Opacity = interpolate(word3Spring, [0, 1], [0, 1]);
+
+  const word1Scale = interpolate(word1Spring, [0, 1], [0.85, 1]);
+  const word2Scale = interpolate(word2Spring, [0, 1], [0.85, 1]);
+  const word3Scale = interpolate(word3Spring, [0, 1], [0.85, 1]);
+
+  const word1Y = interpolate(word1Spring, [0, 1], [30, 0]);
+  const word2Y = interpolate(word2Spring, [0, 1], [30, 0]);
+  const word3Y = interpolate(word3Spring, [0, 1], [30, 0]);
 
   const logoSpring = spring({
-    frame: frame - 20,
+    frame: frame - 30,
     fps,
     config: { damping: 200, stiffness: 100 },
     durationInFrames: 40,
   });
 
-  const textOpacity = interpolate(textSpring, [0, 1], [0, 1]);
-  const textScale = interpolate(textSpring, [0, 1], [0.95, 1]);
-  const textY = interpolate(textSpring, [0, 1], [20, 0]);
-
   const logoOpacity = interpolate(logoSpring, [0, 1], [0, 1]);
-  const logoScale = interpolate(logoSpring, [0, 1], [0.9, 1]);
+  const logoScale = interpolate(logoSpring, [0, 1], [0.85, 1]);
+
+  // Glow animation persistente
+  const glowPulse = interpolate(frame, [10, 50, 90], [0, 1, 0.7], {
+    extrapolateRight: "clamp",
+  });
 
   return (
     <AbsoluteFill
@@ -235,17 +252,39 @@ const AgendaDemo: React.FC<{
     >
       <h1
         style={{
-          fontSize: "100px",
+          fontSize: "105px",
           fontWeight: "bold",
           color: "#1a1a1a",
           fontFamily,
           textAlign: "center",
-          opacity: textOpacity,
-          transform: `scale(${textScale}) translateY(${textY}px)`,
-          letterSpacing: "-0.03em",
+          letterSpacing: "-0.04em",
+          lineHeight: "1.2",
         }}
       >
-        agenda tu <span style={{ color: "#56ff06" }}>demo</span> hoy
+        <span style={{
+          opacity: word1Opacity,
+          transform: `scale(${word1Scale}) translateY(${word1Y}px)`,
+          display: "inline-block",
+        }}>
+          Agenda tu
+        </span>{" "}
+        <span style={{
+          opacity: word2Opacity,
+          transform: `scale(${word2Scale}) translateY(${word2Y}px)`,
+          display: "inline-block",
+          color: "#56ff06",
+          textShadow: `0 0 ${glowPulse * 35}px rgba(86, 255, 6, ${glowPulse * 0.5})`,
+          fontWeight: "800",
+        }}>
+          demo
+        </span>{" "}
+        <span style={{
+          opacity: word3Opacity,
+          transform: `scale(${word3Scale}) translateY(${word3Y}px)`,
+          display: "inline-block",
+        }}>
+          hoy
+        </span>
       </h1>
       {logo && (
         <img
@@ -262,7 +301,7 @@ const AgendaDemo: React.FC<{
   );
 };
 
-// Componente para WhatsApp + texto (sin texto final "contestando 24/7")
+// Componente para WhatsApp + texto con animación secuencial profesional
 const WhatsAppWithText: React.FC = () => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
@@ -270,12 +309,29 @@ const WhatsAppWithText: React.FC = () => {
   // Fase 1: Texto aparece (frames 0-90)
   // Fase 2: WhatsApp aparece (frames 90-450)
 
-  // Texto principal aparece y se queda un poco
-  const textOpacity = interpolate(frame, [0, 30, 90, 105], [0, 1, 1, 0], {
+  // Animación secuencial por línea
+  const line1Spring = spring({ frame: frame - 0, fps, config: { damping: 150, stiffness: 120 } });
+  const line2Spring = spring({ frame: frame - 15, fps, config: { damping: 150, stiffness: 120 } });
+
+  const line1Opacity = interpolate(line1Spring, [0, 1], [0, 1]);
+  const line2Opacity = interpolate(line2Spring, [0, 1], [0, 1]);
+
+  const line1Scale = interpolate(line1Spring, [0, 1], [0.85, 1]);
+  const line2Scale = interpolate(line2Spring, [0, 1], [0.85, 1]);
+
+  const line1Y = interpolate(line1Spring, [0, 1], [30, 0]);
+  const line2Y = interpolate(line2Spring, [0, 1], [30, 0]);
+
+  // Fade out del texto completo
+  const textFadeOut = interpolate(frame, [75, 90, 105], [1, 1, 0], {
     extrapolateRight: "clamp",
   });
 
-  // WhatsApp aparece y crece con más zoom - más rápido y más grande
+  // Glow animations con timing escalonado
+  const glow1 = interpolate(frame, [15, 45, 75], [0, 1, 0.4], { extrapolateRight: "clamp" });
+  const glow2 = interpolate(frame, [30, 60, 90], [0, 1, 0.4], { extrapolateRight: "clamp" });
+
+  // WhatsApp aparece y crece
   const whatsappScale = interpolate(frame, [90, 150], [0.3, 1.15], {
     extrapolateRight: "clamp",
   });
@@ -283,22 +339,11 @@ const WhatsAppWithText: React.FC = () => {
     extrapolateRight: "clamp",
   });
 
-  const textSpring = spring({
-    frame,
-    fps,
-    config: { damping: 200, stiffness: 100 },
-    durationInFrames: 45,
-  });
-
-  const textScale = interpolate(textSpring, [0, 1], [0.95, 1]);
-  const textY = interpolate(textSpring, [0, 1], [15, 0]);
-
-  // Las animaciones del WhatsApp empiezan después de que termine de aparecer (frame 150)
   const whatsappStartFrame = 150;
 
   return (
     <AbsoluteFill style={{ backgroundColor: "white" }}>
-      {/* Texto centrado como en Calendar y Dashboard */}
+      {/* Texto con animación secuencial */}
       <div
         style={{
           position: "absolute",
@@ -306,21 +351,52 @@ const WhatsAppWithText: React.FC = () => {
           left: "50%",
           transform: "translate(-50%, -50%)",
           textAlign: "center",
-          opacity: textOpacity,
           zIndex: 10,
         }}
       >
         <h1
           style={{
-            fontSize: "65px",
+            fontSize: "72px",
             fontWeight: "bold",
             color: "#1a1a1a",
             fontFamily,
-            transform: `scale(${textScale}) translateY(${textY}px)`,
-            lineHeight: "1.3",
+            lineHeight: "1.4",
+            letterSpacing: "-0.02em",
           }}
         >
-          Despreocúparte del <span style={{ color: "#56ff06" }}>whatsapp</span> y que una <span style={{ color: "#56ff06" }}>IA</span> responda por ti como un humano las <span style={{ color: "#56ff06" }}>24 horas</span> del día
+          <span style={{
+            display: "block",
+            marginBottom: "20px",
+            fontSize: "64px",
+            opacity: line1Opacity * textFadeOut,
+            transform: `scale(${line1Scale}) translateY(${line1Y}px)`,
+          }}>
+            Despreocúparte del{" "}
+            <span style={{
+              color: "#56ff06",
+              textShadow: `0 0 ${glow1 * 35}px rgba(86, 255, 6, ${glow1 * 0.5})`,
+              fontWeight: "800",
+            }}>WhatsApp</span>
+          </span>
+          <span style={{
+            display: "block",
+            fontSize: "58px",
+            opacity: line2Opacity * textFadeOut,
+            transform: `scale(${line2Scale}) translateY(${line2Y}px)`,
+          }}>
+            y que una{" "}
+            <span style={{
+              color: "#56ff06",
+              textShadow: `0 0 ${glow2 * 35}px rgba(86, 255, 6, ${glow2 * 0.5})`,
+              fontWeight: "800",
+            }}>IA</span>{" "}
+            responda por ti{" "}
+            <span style={{
+              color: "#56ff06",
+              textShadow: `0 0 ${glow2 * 35}px rgba(86, 255, 6, ${glow2 * 0.5})`,
+              fontWeight: "800",
+            }}>24/7</span>
+          </span>
         </h1>
       </div>
 
@@ -345,36 +421,40 @@ const WhatsAppWithText: React.FC = () => {
   );
 };
 
-// Componente para Calendario + texto que desaparece
+// Componente para Calendario + texto con animación secuencial
 const CalendarWithText: React.FC = () => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
 
-  // Texto desaparece gradualmente (como WhatsApp)
-  const textOpacity = interpolate(frame, [0, 80, 90], [1, 1, 0], {
+  // Animación secuencial por línea
+  const line1Spring = spring({ frame: frame - 0, fps, config: { damping: 150, stiffness: 120 } });
+  const line2Spring = spring({ frame: frame - 12, fps, config: { damping: 150, stiffness: 120 } });
+
+  const line1Opacity = interpolate(line1Spring, [0, 1], [0, 1]);
+  const line2Opacity = interpolate(line2Spring, [0, 1], [0, 1]);
+
+  const line1Scale = interpolate(line1Spring, [0, 1], [0.85, 1]);
+  const line2Scale = interpolate(line2Spring, [0, 1], [0.85, 1]);
+
+  const line1Y = interpolate(line1Spring, [0, 1], [30, 0]);
+  const line2Y = interpolate(line2Spring, [0, 1], [30, 0]);
+
+  // Fade out del texto
+  const textFadeOut = interpolate(frame, [75, 90], [1, 0], {
     extrapolateRight: "clamp",
   });
 
-  // Calendario completamente visible desde frame 90
+  // Glow animations escalonadas
+  const glow1 = interpolate(frame, [12, 42, 75], [0, 1, 0.4], { extrapolateRight: "clamp" });
+  const glow2 = interpolate(frame, [24, 54, 75], [0, 1, 0.4], { extrapolateRight: "clamp" });
+
   const calendarScale = 0.95;
   const calendarOpacity = 1;
-
-  const textSpring = spring({
-    frame,
-    fps,
-    config: { damping: 200, stiffness: 100 },
-    durationInFrames: 45,
-  });
-
-  const textScale = interpolate(textSpring, [0, 1], [0.95, 1]);
-  const textY = interpolate(textSpring, [0, 1], [15, 0]);
-
-  // Las animaciones del calendario empiezan en frame 90
   const calendarStartFrame = 90;
 
   return (
     <AbsoluteFill style={{ backgroundColor: "white" }}>
-      {/* Texto centrado */}
+      {/* Texto con animación secuencial */}
       <div
         style={{
           position: "absolute",
@@ -382,36 +462,48 @@ const CalendarWithText: React.FC = () => {
           left: "50%",
           transform: "translate(-50%, -50%)",
           textAlign: "center",
-          opacity: textOpacity,
           zIndex: 10,
         }}
       >
         <h1
           style={{
-            fontSize: "65px",
+            fontSize: "75px",
             fontWeight: "bold",
             color: "#1a1a1a",
             fontFamily,
-            transform: `scale(${textScale}) translateY(${textY}px)`,
+            lineHeight: "1.3",
+            letterSpacing: "-0.02em",
           }}
         >
-          y apuntándolo todo aquí
-        </h1>
-        <h1
-          style={{
+          <span style={{
+            display: "block",
+            marginBottom: "15px",
+            opacity: line1Opacity * textFadeOut,
+            transform: `scale(${line1Scale}) translateY(${line1Y}px)`,
+          }}>
+            Gestiona{" "}
+            <span style={{
+              color: "#56ff06",
+              textShadow: `0 0 ${glow1 * 35}px rgba(86, 255, 6, ${glow1 * 0.5})`,
+              fontWeight: "800",
+            }}>todas tus citas</span>
+          </span>
+          <span style={{
             fontSize: "65px",
-            fontWeight: "bold",
-            color: "#1a1a1a",
-            fontFamily,
-            marginTop: "15px",
-            transform: `scale(${textScale}) translateY(${textY}px)`,
-          }}
-        >
-          para que tú puedas verlo
+            opacity: line2Opacity * textFadeOut,
+            transform: `scale(${line2Scale}) translateY(${line2Y}px)`,
+          }}>
+            desde un{" "}
+            <span style={{
+              color: "#56ff06",
+              textShadow: `0 0 ${glow2 * 35}px rgba(86, 255, 6, ${glow2 * 0.5})`,
+              fontWeight: "800",
+            }}>calendario inteligente</span>
+          </span>
         </h1>
       </div>
 
-      {/* Calendario que crece en el centro */}
+      {/* Calendario */}
       <div
         style={{
           position: "absolute",
@@ -429,36 +521,40 @@ const CalendarWithText: React.FC = () => {
   );
 };
 
-// Componente para Dashboard + texto que desaparece
+// Componente para Dashboard + texto con animación secuencial
 const DashboardWithText: React.FC = () => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
 
-  // Texto desaparece gradualmente (como WhatsApp)
-  const textOpacity = interpolate(frame, [0, 80, 90], [1, 1, 0], {
+  // Animación secuencial por línea
+  const line1Spring = spring({ frame: frame - 0, fps, config: { damping: 150, stiffness: 120 } });
+  const line2Spring = spring({ frame: frame - 12, fps, config: { damping: 150, stiffness: 120 } });
+
+  const line1Opacity = interpolate(line1Spring, [0, 1], [0, 1]);
+  const line2Opacity = interpolate(line2Spring, [0, 1], [0, 1]);
+
+  const line1Scale = interpolate(line1Spring, [0, 1], [0.85, 1]);
+  const line2Scale = interpolate(line2Spring, [0, 1], [0.85, 1]);
+
+  const line1Y = interpolate(line1Spring, [0, 1], [30, 0]);
+  const line2Y = interpolate(line2Spring, [0, 1], [30, 0]);
+
+  // Fade out del texto
+  const textFadeOut = interpolate(frame, [75, 90], [1, 0], {
     extrapolateRight: "clamp",
   });
 
-  // Dashboard completamente visible desde frame 90
+  // Glow animations escalonadas
+  const glow1 = interpolate(frame, [12, 42, 75], [0, 1, 0.4], { extrapolateRight: "clamp" });
+  const glow2 = interpolate(frame, [24, 54, 75], [0, 1, 0.4], { extrapolateRight: "clamp" });
+
   const dashboardScale = 0.85;
   const dashboardOpacity = 1;
-
-  const textSpring = spring({
-    frame,
-    fps,
-    config: { damping: 200, stiffness: 100 },
-    durationInFrames: 45,
-  });
-
-  const textScale = interpolate(textSpring, [0, 1], [0.95, 1]);
-  const textY = interpolate(textSpring, [0, 1], [15, 0]);
-
-  // Las animaciones del dashboard empiezan en frame 90
   const dashboardStartFrame = 90;
 
   return (
     <AbsoluteFill style={{ backgroundColor: "white" }}>
-      {/* Texto centrado */}
+      {/* Texto con animación secuencial */}
       <div
         style={{
           position: "absolute",
@@ -466,36 +562,48 @@ const DashboardWithText: React.FC = () => {
           left: "50%",
           transform: "translate(-50%, -50%)",
           textAlign: "center",
-          opacity: textOpacity,
           zIndex: 10,
         }}
       >
         <h1
           style={{
-            fontSize: "65px",
+            fontSize: "78px",
             fontWeight: "bold",
             color: "#1a1a1a",
             fontFamily,
-            transform: `scale(${textScale}) translateY(${textY}px)`,
+            lineHeight: "1.3",
+            letterSpacing: "-0.02em",
           }}
         >
-          Llevar el <span style={{ color: "#56ff06" }}>control</span> de tu negocio
-        </h1>
-        <h1
-          style={{
-            fontSize: "65px",
-            fontWeight: "bold",
-            color: "#1a1a1a",
-            fontFamily,
-            marginTop: "15px",
-            transform: `scale(${textScale}) translateY(${textY}px)`,
-          }}
-        >
-          de manera <span style={{ color: "#56ff06" }}>automática</span>
+          <span style={{
+            display: "block",
+            marginBottom: "15px",
+            opacity: line1Opacity * textFadeOut,
+            transform: `scale(${line1Scale}) translateY(${line1Y}px)`,
+          }}>
+            <span style={{
+              color: "#56ff06",
+              textShadow: `0 0 ${glow1 * 35}px rgba(86, 255, 6, ${glow1 * 0.5})`,
+              fontWeight: "800",
+            }}>Control total</span>{" "}
+            de tu negocio
+          </span>
+          <span style={{
+            fontSize: "68px",
+            opacity: line2Opacity * textFadeOut,
+            transform: `scale(${line2Scale}) translateY(${line2Y}px)`,
+          }}>
+            con{" "}
+            <span style={{
+              color: "#56ff06",
+              textShadow: `0 0 ${glow2 * 35}px rgba(86, 255, 6, ${glow2 * 0.5})`,
+              fontWeight: "800",
+            }}>métricas en tiempo real</span>
+          </span>
         </h1>
       </div>
 
-      {/* Dashboard que crece en el centro */}
+      {/* Dashboard */}
       <div
         style={{
           position: "absolute",
