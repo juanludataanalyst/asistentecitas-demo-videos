@@ -9,6 +9,10 @@ import { Cliente2Video } from "./compositions/Cliente2Video";
 import { TestVideoTemplate } from "./compositions/TestVideoTemplate";
 import { PromotionalVideo } from "./compositions/PromotionalVideo";
 import { AudioTest } from "./compositions/AudioTest";
+import { SaaSPromotionalImage } from "./compositions/SaaSPromotionalImage";
+import { CalendarPromotionalImage } from "./compositions/CalendarPromotionalImage";
+import { WhatsAppPromotionalImage } from "./compositions/WhatsAppPromotionalImage";
+import { GeneralPromotionalImage } from "./compositions/GeneralPromotionalImage";
 
 export const RemotionRoot: React.FC = () => {
   return (
@@ -86,7 +90,7 @@ export const RemotionRoot: React.FC = () => {
       <Composition
         id="PromotionalVideo"
         component={PromotionalVideo}
-        durationInFrames={1320}
+        durationInFrames={1350}
         fps={30}
         width={1920}
         height={1080}
@@ -95,6 +99,38 @@ export const RemotionRoot: React.FC = () => {
         id="AudioTest"
         component={AudioTest}
         durationInFrames={180}
+        fps={30}
+        width={1920}
+        height={1080}
+      />
+      <Composition
+        id="SaaSPromotionalImage"
+        component={SaaSPromotionalImage}
+        durationInFrames={1}
+        fps={30}
+        width={1920}
+        height={1080}
+      />
+      <Composition
+        id="CalendarPromotionalImage"
+        component={CalendarPromotionalImage}
+        durationInFrames={1}
+        fps={30}
+        width={1920}
+        height={1080}
+      />
+      <Composition
+        id="WhatsAppPromotionalImage"
+        component={WhatsAppPromotionalImage}
+        durationInFrames={1}
+        fps={30}
+        width={1920}
+        height={1080}
+      />
+      <Composition
+        id="GeneralPromotionalImage"
+        component={GeneralPromotionalImage}
+        durationInFrames={1}
         fps={30}
         width={1920}
         height={1080}

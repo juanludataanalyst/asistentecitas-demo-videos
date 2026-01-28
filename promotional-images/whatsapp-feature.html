@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WhatsApp Automatizado - Asistentecitas</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Sora', sans-serif;
+      background: linear-gradient(135deg, #ffffff 0%, #f0fdf4 100%);
+      width: 1920px;
+      height: 1080px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .container {
+      width: 100%;
+      height: 100%;
+      position: relative;
+    }
+
+    .header {
+      position: absolute;
+      top: 60px;
+      left: 0;
+      right: 0;
+      text-align: center;
+      z-index: 10;
+    }
+
+    .logo {
+      width: 180px;
+      height: auto;
+      margin-bottom: 30px;
+    }
+
+    h1 {
+      font-size: 72px;
+      font-weight: 800;
+      color: #1a1a1a;
+      margin: 0;
+      letter-spacing: -0.03em;
+      line-height: 1.2;
+    }
+
+    .subtitle {
+      font-size: 32px;
+      color: #666;
+      margin: 20px 0 0 0;
+      font-weight: 400;
+    }
+
+    .screenshot-container {
+      position: absolute;
+      top: 280px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 1400px;
+      height: 650px;
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 25px 80px rgba(0,0,0,0.15);
+      overflow: hidden;
+      padding: 20px;
+    }
+
+    .screenshot-frame {
+      width: 100%;
+      height: 100%;
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #fafafa;
+    }
+
+    .mock-whatsapp {
+      width: 90%;
+      height: 90%;
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .chat-header {
+      background: #56ff06;
+      padding: 20px;
+      color: #1a1a1a;
+      font-weight: 700;
+      font-size: 24px;
+      text-align: center;
+    }
+
+    .chat-messages {
+      flex: 1;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .message {
+      max-width: 70%;
+      padding: 15px 20px;
+      border-radius: 18px;
+      font-size: 18px;
+      line-height: 1.4;
+    }
+
+    .message-client {
+      background: #f0f0f0;
+      align-self: flex-start;
+      color: #1a1a1a;
+    }
+
+    .message-ai {
+      background: #56ff06;
+      align-self: flex-end;
+      color: #1a1a1a;
+      font-weight: 600;
+    }
+
+    .cta-container {
+      position: absolute;
+      bottom: 60px;
+      left: 0;
+      right: 0;
+      text-align: center;
+    }
+
+    .cta-button {
+      display: inline-block;
+      padding: 18px 50px;
+      background: #56ff06;
+      border-radius: 50px;
+      font-size: 28px;
+      font-weight: 700;
+      color: #1a1a1a;
+      box-shadow: 0 10px 40px rgba(86, 255, 6, 0.25);
+      text-decoration: none;
+    }
+
+    .badge {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: linear-gradient(135deg, #56ff06 0%, #4edd00 100%);
+      color: #1a1a1a;
+      padding: 12px 24px;
+      border-radius: 50px;
+      font-weight: 700;
+      font-size: 16px;
+      box-shadow: 0 4px 16px rgba(86, 255, 6, 0.3);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <img src="../public/assets/logo.svg" alt="Asistentecitas" class="logo" onerror="this.style.display='none'">
+      <h1>WhatsApp Automatizado</h1>
+      <p class="subtitle">IA que responde 24/7 por ti</p>
+    </div>
+
+    <div class="screenshot-container">
+      <div class="screenshot-frame">
+        <div class="mock-whatsapp">
+          <div class="chat-header">💬 Asistentecitas IA</div>
+          <div class="chat-messages">
+            <div class="message message-client">
+              Hola, ¿tienen disponibilidad para mañana?
+            </div>
+            <div class="message message-ai">
+              ¡Hola! 👋 Sí, tenemos espacios disponibles mañana a las 10:00 AM y 3:00 PM. ¿Cuál prefieres?
+            </div>
+            <div class="message message-client">
+              Perfecto, agenda las 10:00 AM
+            </div>
+            <div class="message message-ai">
+              ✅ ¡Cita agendada! Te enviaré un recordatorio mañana. ¡Gracias!
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cta-container">
+      <a href="#" class="cta-button">Agenda tu demo hoy</a>
+    </div>
+
+    <div class="badge">🤖 Powered by IA</div>
+  </div>
+</body>
+</html>

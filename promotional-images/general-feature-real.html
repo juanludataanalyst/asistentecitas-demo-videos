@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Todo lo que tu salón necesita - Asistentecitas</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Sora', sans-serif;
+      background: linear-gradient(135deg, #ffffff 0%, #f0fdf4 100%);
+      width: 1920px;
+      height: 1080px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .container {
+      width: 100%;
+      height: 100%;
+      position: relative;
+    }
+
+    .header {
+      position: absolute;
+      top: 50px;
+      left: 0;
+      right: 0;
+      text-align: center;
+      z-index: 10;
+    }
+
+    .logo {
+      width: 160px;
+      height: auto;
+      margin-bottom: 25px;
+    }
+
+    h1 {
+      font-size: 64px;
+      font-weight: 800;
+      color: #1a1a1a;
+      margin: 0;
+      letter-spacing: -0.03em;
+      line-height: 1.2;
+    }
+
+    .subtitle {
+      font-size: 28px;
+      color: #666;
+      margin: 15px 0 0 0;
+      font-weight: 400;
+    }
+
+    .screenshot-container {
+      position: absolute;
+      top: 230px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 1600px;
+      height: 680px;
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 25px 80px rgba(0,0,0,0.15);
+      overflow: hidden;
+      padding: 15px;
+    }
+
+    .screenshot-frame {
+      width: 100%;
+      height: 100%;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .screenshot-frame img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .browser-chrome {
+      background: #f1f1f1;
+      padding: 12px 15px;
+      border-radius: 12px 12px 0 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .browser-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+    }
+
+    .browser-dot.red { background: #ff5f57; }
+    .browser-dot.yellow { background: #ffbd2e; }
+    .browser-dot.green { background: #28c940; }
+
+    .browser-address {
+      flex: 1;
+      background: white;
+      padding: 6px 15px;
+      border-radius: 6px;
+      font-size: 14px;
+      color: #666;
+      text-align: center;
+    }
+
+    .cta-container {
+      position: absolute;
+      bottom: 40px;
+      left: 0;
+      right: 0;
+      text-align: center;
+      z-index: 10;
+    }
+
+    .cta-button {
+      display: inline-block;
+      padding: 16px 45px;
+      background: #56ff06;
+      border-radius: 50px;
+      font-size: 26px;
+      font-weight: 700;
+      color: #1a1a1a;
+      box-shadow: 0 10px 40px rgba(86, 255, 6, 0.25);
+      text-decoration: none;
+    }
+
+    .badge {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: linear-gradient(135deg, #56ff06 0%, #4edd00 100%);
+      color: #1a1a1a;
+      padding: 12px 24px;
+      border-radius: 50px;
+      font-weight: 700;
+      font-size: 16px;
+      box-shadow: 0 4px 16px rgba(86, 255, 6, 0.3);
+      z-index: 10;
+    }
+
+    .glow {
+      position: absolute;
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, rgba(86, 255, 6, 0.15) 0%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    .glow-1 { top: -100px; left: -100px; }
+    .glow-2 { bottom: -100px; right: -100px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="glow glow-1"></div>
+    <div class="glow glow-2"></div>
+
+    <div class="header">
+      <img src="../public/assets/logo.svg" alt="Asistentecitas" class="logo" onerror="this.style.display='none'">
+      <h1>Todo lo que tu salón necesita</h1>
+      <p class="subtitle">WhatsApp, Citas y Métricas en una sola plataforma</p>
+    </div>
+
+    <div class="screenshot-container">
+      <div class="browser-chrome">
+        <div class="browser-dot red"></div>
+        <div class="browser-dot yellow"></div>
+        <div class="browser-dot green"></div>
+        <div class="browser-address">asistentecitas.com</div>
+      </div>
+      <div class="screenshot-frame">
+        <img src="../screenshots/general.png" alt="Vista general de Asistentecitas">
+      </div>
+    </div>
+
+    <div class="cta-container">
+      <a href="#" class="cta-button">Agenda tu demo hoy</a>
+    </div>
+
+    <div class="badge">✨ All-in-One Platform</div>
+  </div>
+</body>
+</html>

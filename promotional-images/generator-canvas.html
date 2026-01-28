@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Generador de Imágenes Promocionales - Canvas</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Sora', sans-serif;
+      background: #1a1a1a;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px;
+      gap: 30px;
+    }
+    h1 {
+      color: white;
+      font-size: 32px;
+      font-weight: 700;
+    }
+    .controls {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    button {
+      padding: 16px 32px;
+      background: #56ff06;
+      border: none;
+      border-radius: 12px;
+      font-family: 'Sora', sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      color: #1a1a1a;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(86, 255, 6, 0.4);
+    }
+    .canvas-container {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 30px;
+      max-width: 100%;
+    }
+    canvas {
+      max-width: 100%;
+      height: auto;
+      border-radius: 12px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    }
+    .status {
+      color: #56ff06;
+      font-size: 14px;
+      font-weight: 500;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Generador de Imágenes Promocionales - Canvas</h1>
+
+  <div class="controls">
+    <button onclick="generateAll()">Generar Todas las Imágenes</button>
+    <button onclick="generateDashboard()">Dashboard</button>
+    <button onclick="generateCalendar()">Calendar</button>
+    <button onclick="generateWhatsApp()">WhatsApp</button>
+    <button onclick="generateGeneral()">General</button>
+  </div>
+
+  <div class="canvas-container" id="canvasContainer"></div>
+
+  <script>
+    const CANVAS_WIDTH = 1920;
+    const CANVAS_HEIGHT = 1080;
+    const LIME = '#56ff06';
+    const OFF_WHITE = '#fafbfa';
+    const GRAY_100 = '#f3f4f6';
+    const GRAY_200 = '#e5e7eb';
+    const GRAY_800 = '#1f2937';
+    const GRAY_900 = '#111827';
+
+    // Función para cargar imagen
+    function loadImage(src) {
+      return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.crossOrigin = 'anonymous';
+        img.onload = () => resolve(img);
+        img.onerror = reject;
+        img.src = src;
+      });
+    }
+
+    // Función para dibujar texto con fuente Sora
+    function drawText(ctx, text, x, y, size, weight, color, align = 'left') {
+      ctx.font = `${weight} ${size}px Sora`;
+      ctx.fillStyle = color;
+      ctx.textAlign = align;
+      ctx.fillText(text, x, y);
+    }
+
+    // Función para dibujar rectángulo con bordes redondeados
+    function roundRect(ctx, x, y, width, height, radius) {
+      ctx.beginPath();
+      ctx.moveTo(x + radius, y);
+      ctx.lineTo(x + width - radius, y);
+      ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+      ctx.lineTo(x + width, y + height - radius);
+      ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+      ctx.lineTo(x + radius, y + height);
+      ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+      ctx.lineTo(x, y + radius);
+      ctx.quadraticCurveTo(x, y, x + radius, y);
+      ctx.closePath();
+    }
+
+    // Generar imagen de Dashboard
+    async function generateDashboard() {
+      const canvas = document.createElement('canvas');
+      canvas.width = CANVAS_WIDTH;
+      canvas.height = CANVAS_HEIGHT;
+      const ctx = canvas.getContext('2d');
+
+      // Fondo con gradiente sutil
+      const gradient = ctx.createLinearGradient(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+      gradient.addColorStop(0, '#ffffff');
+      gradient.addColorStop(1, OFF_WHITE);
+      ctx.fillStyle = gradient;
+      ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+
+      // Grid pattern sutil
+      ctx.strokeStyle = GRAY_200;
+      ctx.lineWidth = 0.5;
+      for (let x = 0; x < CANVAS_WIDTH; x += 60) {
+        ctx.beginPath();
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, CANVAS_HEIGHT);
+        ctx.stroke();
+      }
+      for (let y = 0; y < CANVAS_HEIGHT; y += 60) {
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(CANVAS_WIDTH, y);
+        ctx.stroke();
+      }
+
+      // Header
+      const logoY = 80;
+      ctx.fillStyle = GRAY_800;
+      ctx.font = '600 13px Sora';
+      ctx.fillText('● ANALYTICS DASHBOARD', 100, logoY);
+
+      drawText(ctx, 'Métricas en', 100, 200, 72, '700', GRAY_200);
+      drawText(ctx, 'tiempo real', 100, 280, 72, '700', GRAY_900);
+
+      drawText(ctx, 'Toma decisiones informadas con datos actualizados al instante.', 100, 340, 20, '400', GRAY_800);
+
+      // Trust badge
+      roundRect(ctx, 1420, 60, 400, 50, 8);
+      ctx.fillStyle = 'white';
+      ctx.fill();
+      ctx.strokeStyle = GRAY_200;
+      ctx.lineWidth = 1;
+      ctx.stroke();
+      drawText(ctx, '★★★★★ +500 salones confían', 1440, 92, 14, '500', GRAY_800, 'left');
+
+      // Features
+      const features = [
+        { icon: '📊', title: 'Dashboard completo', desc: 'Visualiza ingresos, citas y rendimiento' },
+        { icon: '⚡', title: 'Actualización en vivo', desc: 'Datos sincronizados en tiempo real' },
+        { icon: '📈', title: 'Reportes detallados', desc: 'Exporta reportes personalizados' }
+      ];
+
+      features.forEach((feature, i) => {
+        const y = 420 + i * 140;
+        roundRect(ctx, 100, y, 700, 120, 16);
+        ctx.fillStyle = 'white';
+        ctx.fill();
+        ctx.strokeStyle = GRAY_200;
+        ctx.lineWidth = 1;
+        ctx.stroke();
+
+        // Icon background
+        roundRect(ctx, 130, y + 32, 56, 56, 12);
+        const iconGrad = ctx.createLinearGradient(130, y + 32, 186, y + 88);
+        iconGrad.addColorStop(0, LIME);
+        iconGrad.addColorStop(1, '#4cd905');
+        ctx.fillStyle = iconGrad;
+        ctx.fill();
+
+        drawText(ctx, feature.icon, 158, y + 68, 28, '400', '#111827', 'center');
+        drawText(ctx, feature.title, 210, y + 52, 20, '700', GRAY_900, 'left');
+        drawText(ctx, feature.desc, 210, y + 80, 15, '400', GRAY_800, 'left');
+      });
+
+      // Screenshot
+      try {
+        const screenshot = await loadImage('../screenshots/dashboard.PNG');
+        const screenshotX = 900;
+        const screenshotY = 380;
+        const screenshotWidth = 920;
+        const screenshotHeight = 520;
+
+        // Shadow
+        ctx.shadowColor = 'rgba(0, 0, 0, 0.08)';
+        ctx.shadowBlur = 30;
+        ctx.shadowOffsetX = 0;
+        ctx.shadowOffsetY = 10;
+
+        roundRect(ctx, screenshotX, screenshotY, screenshotWidth, screenshotHeight, 20);
+        ctx.fillStyle = 'white';
+        ctx.fill();
+
+        ctx.shadowColor = 'transparent';
+
+        // Browser chrome
+        roundRect(ctx, screenshotX, screenshotY, screenshotWidth, 50, 20);
+        ctx.fillStyle = GRAY_100;
+        ctx.fill();
+
+        // Browser dots
+        ctx.fillStyle = '#ff5f57';
+        ctx.beginPath();
+        ctx.arc(screenshotX + 30, screenshotY + 25, 6, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = '#ffbd2e';
+        ctx.beginPath();
+        ctx.arc(screenshotX + 50, screenshotY + 25, 6, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = '#28c940';
+        ctx.beginPath();
+        ctx.arc(screenshotX + 70, screenshotY + 25, 6, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Address bar
+        roundRect(ctx, screenshotX + 100, screenshotY + 12, 760, 26, 6);
+        ctx.fillStyle = 'white';
+        ctx.fill();
+        ctx.strokeStyle = GRAY_200;
+        ctx.lineWidth = 1;
+        ctx.stroke();
+        drawText(ctx, 'asistentecitas.com/dashboard', screenshotX + 120, screenshotY + 30, 13, '500', GRAY_200);
+
+        // Screenshot image
+        ctx.save();
+        roundRect(ctx, screenshotX + 16, screenshotY + 66, screenshotWidth - 32, screenshotHeight - 82, 12);
+        ctx.clip();
+        ctx.drawImage(screenshot, screenshotX + 16, screenshotY + 66, screenshotWidth - 32, screenshotHeight - 82);
+        ctx.restore();
+
+        // NEW badge
+        roundRect(ctx, screenshotX + screenshotWidth - 80, screenshotY - 20, 100, 40, 12);
+        ctx.fillStyle = GRAY_900;
+        ctx.fill();
+        drawText(ctx, 'NEW', screenshotX + screenshotWidth - 30, screenshotY + 8, 15, '700', 'white', 'center');
+      } catch (e) {
+        console.error('Error loading screenshot:', e);
+      }
+
+      // Footer CTA
+      roundRect(ctx, 100, 940, 220, 60, 12);
+      const ctaGrad = ctx.createLinearGradient(100, 940, 320, 1000);
+      ctaGrad.addColorStop(0, GRAY_900);
+      ctaGrad.addColorStop(1, '#374151');
+      ctx.fillStyle = ctaGrad;
+      ctx.fill();
+      drawText(ctx, 'Comenzar gratis →', 210, 977, 17, '700', 'white', 'center');
+
+      // Trust badge footer
+      roundRect(ctx, 1420, 950, 400, 40, 8);
+      ctx.fillStyle = 'white';
+      ctx.fill();
+      ctx.strokeStyle = GRAY_200;
+      ctx.stroke();
+      drawText(ctx, '★★★★★ 4.9/5 en Capterra', 1620, 977, 14, '500', GRAY_800, 'center');
+
+      addCanvasToContainer(canvas, 'dashboard');
+    }
+
+    // Generar Calendar
+    async function generateCalendar() {
+      const canvas = document.createElement('canvas');
+      canvas.width = CANVAS_WIDTH;
+      canvas.height = CANVAS_HEIGHT;
+      const ctx = canvas.getContext('2d');
+
+      // Fondo
+      const gradient = ctx.createLinearGradient(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+      gradient.addColorStop(0, '#ffffff');
+      gradient.addColorStop(1, OFF_WHITE);
+      ctx.fillStyle = gradient;
+      ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+
+      // Grid
+      ctx.strokeStyle = GRAY_200;
+      ctx.lineWidth = 0.5;
+      for (let x = 0; x < CANVAS_WIDTH; x += 60) {
+        ctx.beginPath();
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, CANVAS_HEIGHT);
+        ctx.stroke();
+      }
+      for (let y = 0; y < CANVAS_HEIGHT; y += 60) {
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(CANVAS_WIDTH, y);
+        ctx.stroke();
+      }
+
+      // Header
+      ctx.fillStyle = GRAY_800;
+      ctx.font = '600 13px Sora';
+      ctx.fillText('● SMART CALENDAR', 100, 80);
+
+      drawText(ctx, 'Gestiona tus', 100, 200, 72, '700', GRAY_200);
+      drawText(ctx, 'citas fácil', 100, 280, 72, '700', GRAY_900);
+
+      drawText(ctx, 'Calendario inteligente con vista múltiple por empleados.', 100, 340, 20, '400', GRAY_800);
+
+      // Trust badge
+      roundRect(ctx, 1420, 60, 400, 50, 8);
+      ctx.fillStyle = 'white';
+      ctx.fill();
+      ctx.strokeStyle = GRAY_200;
+      ctx.stroke();
+      drawText(ctx, '★★★★★ +10,000 citas agendadas', 1440, 92, 14, '500', GRAY_800);
+
+      // Features
+      const features = [
+        { icon: '📅', title: 'Vista unificada', desc: 'Ve todas las citas de tus empleados' },
+        { icon: '🔄', title: 'Arrastra y suelta', desc: 'Reorganiza citas fácilmente' },
+        { icon: '⏰', title: 'Recordatorios automáticos', desc: 'Reduce no-shows en un 80%' }
+      ];
+
+      features.forEach((feature, i) => {
+        const y = 420 + i * 140;
+        roundRect(ctx, 100, y, 700, 120, 16);
+        ctx.fillStyle = 'white';
+        ctx.fill();
+        ctx.strokeStyle = GRAY_200;
+        ctx.stroke();
+
+        roundRect(ctx, 130, y + 32, 56, 56, 12);
+        const iconGrad = ctx.createLinearGradient(130, y + 32, 186, y + 88);
+        iconGrad.addColorStop(0, LIME);
+        iconGrad.addColorStop(1, '#4cd905');
+        ctx.fillStyle = iconGrad;
+        ctx.fill();
+
+        drawText(ctx, feature.icon, 158, y + 68, 28, '400', '#111827', 'center');
+        drawText(ctx, feature.title, 210, y + 52, 20, '700', GRAY_900);
+        drawText(ctx, feature.desc, 210, y + 80, 15, '400', GRAY_800);
+      });
+
+      // Screenshot
+      try {
+        const screenshot = await loadImage('../screenshots/calendar.png');
+        const screenshotX = 900;
+        const screenshotY = 380;
+        const screenshotWidth = 920;
+        const screenshotHeight = 520;
+
+        ctx.shadowColor = 'rgba(0, 0, 0, 0.08)';
+        ctx.shadowBlur = 30;
+        ctx.shadowOffsetX = 0;
+        ctx.shadowOffsetY = 10;
+
+        roundRect(ctx, screenshotX, screenshotY, screenshotWidth, screenshotHeight, 20);
+        ctx.fillStyle = 'white';
+        ctx.fill();
+
+        ctx.shadowColor = 'transparent';
+
+        roundRect(ctx, screenshotX, screenshotY, screenshotWidth, 50, 20);
+        ctx.fillStyle = GRAY_100;
+        ctx.fill();
+
+        ctx.fillStyle = '#ff5f57';
+        ctx.beginPath();
+        ctx.arc(screenshotX + 30, screenshotY + 25, 6, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = '#ffbd2e';
+        ctx.beginPath();
+        ctx.arc(screenshotX + 50, screenshotY + 25, 6, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = '#28c940';
+        ctx.beginPath();
+        ctx.arc(screenshotX + 70, screenshotY + 25, 6, 0, Math.PI * 2);
+        ctx.fill();
+
+        roundRect(ctx, screenshotX + 100, screenshotY + 12, 760, 26, 6);
+        ctx.fillStyle = 'white';
+        ctx.fill();
+        ctx.strokeStyle = GRAY_200;
+        ctx.stroke();
+        drawText(ctx, 'asistentecitas.com/calendar', screenshotX + 120, screenshotY + 30, 13, '500', GRAY_200);
+
+        ctx.save();
+        roundRect(ctx, screenshotX + 16, screenshotY + 66, screenshotWidth - 32, screenshotHeight - 82, 12);
+        ctx.clip();
+        ctx.drawImage(screenshot, screenshotX + 16, screenshotY + 66, screenshotWidth - 32, screenshotHeight - 82);
+        ctx.restore();
+
+        // Badge
+        roundRect(ctx, screenshotX + screenshotWidth - 100, screenshotY - 20, 120, 40, 12);
+        ctx.fillStyle = GRAY_900;
+        ctx.fill();
+        drawText(ctx, 'POPULAR', screenshotX + screenshotWidth - 40, screenshotY + 8, 15, '700', 'white', 'center');
+      } catch (e) {
+        console.error('Error loading screenshot:', e);
+      }
+
+      // Footer
+      roundRect(ctx, 100, 940, 200, 60, 12);
+      const ctaGrad = ctx.createLinearGradient(100, 940, 300, 1000);
+      ctaGrad.addColorStop(0, GRAY_900);
+      ctaGrad.addColorStop(1, '#374151');
+      ctx.fillStyle = ctaGrad;
+      ctx.fill();
+      drawText(ctx, 'Prueba gratis →', 200, 977, 17, '700', 'white', 'center');
+
+      roundRect(ctx, 1420, 950, 400, 40, 8);
+      ctx.fillStyle = 'white';
+      ctx.fill();
+      ctx.strokeStyle = GRAY_200;
+      ctx.stroke();
+      drawText(ctx, '★★★★★ 4.9/5 en Product Hunt', 1620, 977, 14, '500', GRAY_800, 'center');
+
+      addCanvasToContainer(canvas, 'calendar');
+    }
+
+    // Generar WhatsApp
+    async function generateWhatsApp() {
+      const canvas = document.createElement('canvas');
+      canvas.width = CANVAS_WIDTH;
+      canvas.height = CANVAS_HEIGHT;
+      const ctx = canvas.getContext('2d');
+
+      const gradient = ctx.createLinearGradient(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+      gradient.addColorStop(0, '#ffffff');
+      gradient.addColorStop(1, OFF_WHITE);
+      ctx.fillStyle = gradient;
+      ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+
+      ctx.strokeStyle = GRAY_200;
+      ctx.lineWidth = 0.5;
+      for (let x = 0; x < CANVAS_WIDTH; x += 60) {
+        ctx.beginPath();
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, CANVAS_HEIGHT);
+        ctx.stroke();
+      }
+
+      ctx.fillStyle = GRAY_800;
+      ctx.font = '600 13px Sora';
+      ctx.fillText('● WHATSAPP AUTOMATION', 100, 80);
+
+      drawText(ctx, 'WhatsApp', 100, 200, 72, '700', GRAY_200);
+      drawText(ctx, 'Automatizado', 100, 280, 72, '700', GRAY_900);
+
+      drawText(ctx, 'IA que responde 24/7 por ti. Nunca pierdas una oportunidad de venta.', 100, 340, 20, '400', GRAY_800);
+
+      const features = [
+        { icon: '🤖', title: 'IA Chatbot', desc: 'Responde automáticamente 24/7' },
+        { icon: '⚡', title: 'Respuesta instantánea', desc: 'Menos de 1 minuto de espera' },
+        { icon: '💬', title: 'Conversaciones naturales', desc: 'Como si fuera un humano' }
+      ];
+
+      features.forEach((feature, i) => {
+        const y = 420 + i * 140;
+        roundRect(ctx, 100, y, 700, 120, 16);
+        ctx.fillStyle = 'white';
+        ctx.fill();
+        ctx.strokeStyle = GRAY_200;
+        ctx.stroke();
+
+        roundRect(ctx, 130, y + 32, 56, 56, 12);
+        const iconGrad = ctx.createLinearGradient(130, y + 32, 186, y + 88);
+        iconGrad.addColorStop(0, LIME);
+        iconGrad.addColorStop(1, '#4cd905');
+        ctx.fillStyle = iconGrad;
+        ctx.fill();
+
+        drawText(ctx, feature.icon, 158, y + 68, 28, '400', '#111827', 'center');
+        drawText(ctx, feature.title, 210, y + 52, 20, '700', GRAY_900);
+        drawText(ctx, feature.desc, 210, y + 80, 15, '400', GRAY_800);
+      });
+
+      try {
+        const screenshot = await loadImage('../screenshots/whatsapp.png');
+        const screenshotX = 900;
+        const screenshotY = 380;
+        const screenshotWidth = 920;
+        const screenshotHeight = 520;
+
+        ctx.shadowColor = 'rgba(0, 0, 0, 0.08)';
+        ctx.shadowBlur = 30;
+        ctx.shadowOffsetX = 0;
+        ctx.shadowOffsetY = 10;
+
+        roundRect(ctx, screenshotX, screenshotY, screenshotWidth, screenshotHeight, 20);
+        ctx.fillStyle = 'white';
+        ctx.fill();
+
+        ctx.shadowColor = 'transparent';
+
+        roundRect(ctx, screenshotX, screenshotY, screenshotWidth, 50, 20);
+        ctx.fillStyle = GRAY_100;
+        ctx.fill();
+
+        ctx.fillStyle = '#ff5f57';
+        ctx.beginPath();
+        ctx.arc(screenshotX + 30, screenshotY + 25, 6, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = '#ffbd2e';
+        ctx.beginPath();
+        ctx.arc(screenshotX + 50, screenshotY + 25, 6, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = '#28c940';
+        ctx.beginPath();
+        ctx.arc(screenshotX + 70, screenshotY + 25, 6, 0, Math.PI * 2);
+        ctx.fill();
+
+        roundRect(ctx, screenshotX + 100, screenshotY + 12, 760, 26, 6);
+        ctx.fillStyle = 'white';
+        ctx.fill();
+        ctx.strokeStyle = GRAY_200;
+        ctx.stroke();
+        drawText(ctx, 'asistentecitas.com/whatsapp', screenshotX + 120, screenshotY + 30, 13, '500', GRAY_200);
+
+        ctx.save();
+        roundRect(ctx, screenshotX + 16, screenshotY + 66, screenshotWidth - 32, screenshotHeight - 82, 12);
+        ctx.clip();
+        ctx.drawImage(screenshot, screenshotX + 16, screenshotY + 66, screenshotWidth - 32, screenshotHeight - 82);
+        ctx.restore();
+
+        roundRect(ctx, screenshotX + screenshotWidth - 80, screenshotY - 20, 80, 40, 12);
+        ctx.fillStyle = LIME;
+        ctx.fill();
+        drawText(ctx, 'AI', screenshotX + screenshotWidth - 40, screenshotY + 8, 15, '700', '#111827', 'center');
+      } catch (e) {
+        console.error('Error loading screenshot:', e);
+      }
+
+      roundRect(ctx, 100, 940, 220, 60, 12);
+      const ctaGrad = ctx.createLinearGradient(100, 940, 320, 1000);
+      ctaGrad.addColorStop(0, GRAY_900);
+      ctaGrad.addColorStop(1, '#374151');
+      ctx.fillStyle = ctaGrad;
+      ctx.fill();
+      drawText(ctx, 'Comenzar gratis →', 210, 977, 17, '700', 'white', 'center');
+
+      addCanvasToContainer(canvas, 'whatsapp');
+    }
+
+    // Generar General
+    async function generateGeneral() {
+      const canvas = document.createElement('canvas');
+      canvas.width = CANVAS_WIDTH;
+      canvas.height = CANVAS_HEIGHT;
+      const ctx = canvas.getContext('2d');
+
+      const gradient = ctx.createLinearGradient(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+      gradient.addColorStop(0, '#ffffff');
+      gradient.addColorStop(1, OFF_WHITE);
+      ctx.fillStyle = gradient;
+      ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+
+      ctx.strokeStyle = GRAY_200;
+      ctx.lineWidth = 0.5;
+      for (let x = 0; x < CANVAS_WIDTH; x += 60) {
+        ctx.beginPath();
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, CANVAS_HEIGHT);
+        ctx.stroke();
+      }
+
+      ctx.fillStyle = GRAY_800;
+      ctx.font = '600 13px Sora';
+      ctx.fillText('● ALL-IN-ONE PLATFORM', 100, 80);
+
+      drawText(ctx, 'Todo lo que tu', 100, 200, 72, '700', GRAY_200);
+      drawText(ctx, 'salón necesita', 100, 280, 72, '700', GRAY_900);
+
+      drawText(ctx, 'WhatsApp, Citas y Métricas en una sola plataforma integrada.', 100, 340, 20, '400', GRAY_800);
+
+      const features = [
+        { icon: '📱', title: 'WhatsApp IA', desc: 'Automatizado 24/7' },
+        { icon: '📅', title: 'Calendario Smart', desc: 'Gestión inteligente' },
+        { icon: '📊', title: 'Dashboard', desc: 'Métricas en tiempo real' }
+      ];
+
+      features.forEach((feature, i) => {
+        const y = 420 + i * 140;
+        roundRect(ctx, 100, y, 700, 120, 16);
+        ctx.fillStyle = 'white';
+        ctx.fill();
+        ctx.strokeStyle = GRAY_200;
+        ctx.stroke();
+
+        roundRect(ctx, 130, y + 32, 56, 56, 12);
+        const iconGrad = ctx.createLinearGradient(130, y + 32, 186, y + 88);
+        iconGrad.addColorStop(0, LIME);
+        iconGrad.addColorStop(1, '#4cd905');
+        ctx.fillStyle = iconGrad;
+        ctx.fill();
+
+        drawText(ctx, feature.icon, 158, y + 68, 28, '400', '#111827', 'center');
+        drawText(ctx, feature.title, 210, y + 52, 20, '700', GRAY_900);
+        drawText(ctx, feature.desc, 210, y + 80, 15, '400', GRAY_800);
+      });
+
+      try {
+        const screenshot = await loadImage('../screenshots/general.png');
+        const screenshotX = 900;
+        const screenshotY = 380;
+        const screenshotWidth = 920;
+        const screenshotHeight = 520;
+
+        ctx.shadowColor = 'rgba(0, 0, 0, 0.08)';
+        ctx.shadowBlur = 30;
+        ctx.shadowOffsetX = 0;
+        ctx.shadowOffsetY = 10;
+
+        roundRect(ctx, screenshotX, screenshotY, screenshotWidth, screenshotHeight, 20);
+        ctx.fillStyle = 'white';
+        ctx.fill();
+
+        ctx.shadowColor = 'transparent';
+
+        roundRect(ctx, screenshotX, screenshotY, screenshotWidth, 50, 20);
+        ctx.fillStyle = GRAY_100;
+        ctx.fill();
+
+        ctx.fillStyle = '#ff5f57';
+        ctx.beginPath();
+        ctx.arc(screenshotX + 30, screenshotY + 25, 6, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = '#ffbd2e';
+        ctx.beginPath();
+        ctx.arc(screenshotX + 50, screenshotY + 25, 6, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = '#28c940';
+        ctx.beginPath();
+        ctx.arc(screenshotX + 70, screenshotY + 25, 6, 0, Math.PI * 2);
+        ctx.fill();
+
+        roundRect(ctx, screenshotX + 100, screenshotY + 12, 760, 26, 6);
+        ctx.fillStyle = 'white';
+        ctx.fill();
+        ctx.strokeStyle = GRAY_200;
+        ctx.stroke();
+        drawText(ctx, 'asistentecitas.com', screenshotX + 120, screenshotY + 30, 13, '500', GRAY_200);
+
+        ctx.save();
+        roundRect(ctx, screenshotX + 16, screenshotY + 66, screenshotWidth - 32, screenshotHeight - 82, 12);
+        ctx.clip();
+        ctx.drawImage(screenshot, screenshotX + 16, screenshotY + 66, screenshotWidth - 32, screenshotHeight - 82);
+        ctx.restore();
+
+        roundRect(ctx, screenshotX + screenshotWidth - 80, screenshotY - 20, 80, 40, 12);
+        ctx.fillStyle = LIME;
+        ctx.fill();
+        drawText(ctx, 'NEW', screenshotX + screenshotWidth - 40, screenshotY + 8, 15, '700', '#111827', 'center');
+      } catch (e) {
+        console.error('Error loading screenshot:', e);
+      }
+
+      roundRect(ctx, 100, 940, 220, 60, 12);
+      const ctaGrad = ctx.createLinearGradient(100, 940, 320, 1000);
+      ctaGrad.addColorStop(0, GRAY_900);
+      ctaGrad.addColorStop(1, '#374151');
+      ctx.fillStyle = ctaGrad;
+      ctx.fill();
+      drawText(ctx, 'Prueba gratis →', 210, 977, 17, '700', 'white', 'center');
+
+      addCanvasToContainer(canvas, 'general');
+    }
+
+    function addCanvasToContainer(canvas, name) {
+      const container = document.getElementById('canvasContainer');
+      const wrapper = document.createElement('div');
+      wrapper.innerHTML = `
+        <div>
+          <canvas id="${name}-canvas"></canvas>
+          <div class="status">✅ ${name.toUpperCase()} generado</div>
+        </div>
+      `;
+      container.appendChild(wrapper);
+
+      const canvasElement = document.getElementById(`${name}-canvas`);
+      canvasElement.width = canvas.width;
+      canvasElement.height = canvas.height;
+      const ctx = canvasElement.getContext('2d');
+      ctx.drawImage(canvas, 0, 0);
+
+      // Download button
+      const downloadBtn = document.createElement('button');
+      downloadBtn.textContent = `Descargar ${name}.png`;
+      downloadBtn.onclick = () => {
+        const link = document.createElement('a');
+        link.download = `${name}-promotional.png`;
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+      };
+      wrapper.appendChild(downloadBtn);
+    }
+
+    async function generateAll() {
+      await generateDashboard();
+      await generateCalendar();
+      await generateWhatsApp();
+      await generateGeneral();
+    }
+
+    // Auto-generate on load
+    window.onload = generateAll;
+  </script>
+</body>
+</html>
