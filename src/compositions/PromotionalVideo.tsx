@@ -1,4 +1,4 @@
-import { AbsoluteFill, Series, useCurrentFrame, useVideoConfig, interpolate, spring, Sequence } from "remotion";
+import { AbsoluteFill, Series, useCurrentFrame, useVideoConfig, interpolate, spring, Sequence, staticFile } from "remotion";
 import { Audio } from "@remotion/media";
 import { loadFont } from "@remotion/google-fonts/Sora";
 import { WhatsAppCitaPromo } from "./WhatsAppCitaPromo";
@@ -266,7 +266,7 @@ const AgendaDemo: React.FC<{
           transform: `scale(${word1Scale}) translateY(${word1Y}px)`,
           display: "inline-block",
         }}>
-          Agenda tu
+          Pide tu
         </span>{" "}
         <span style={{
           opacity: word2Opacity,
@@ -622,12 +622,21 @@ const DashboardWithText: React.FC = () => {
 };
 
 export const PromotionalVideo = () => {
-  const { fps } = useVideoConfig();
+  const { fps, durationInFrames } = useVideoConfig();
+  const frame = useCurrentFrame();
+
+  // Fade out del audio en los últimos 3 segundos (90 frames)
+  const audioVolume = interpolate(
+    frame,
+    [durationInFrames - 90, durationInFrames - 10],
+    [1, 0],
+    { extrapolateRight: "clamp", extrapolateLeft: "clamp" }
+  );
 
   return (
     <AbsoluteFill style={{ backgroundColor: "white" }}>
-      {/* Música de fondo durante todo el video */}
-      {/* <Audio src="/audios/happy-piano.mp3" volume={0.3} /> */}
+      {/* Música de fondo durante todo el video con fade out */}
+      <Audio src={staticFile("audios/summer-time.mp3")} volume={audioVolume} />
 
       <Series>
         {/* 1. INTRO: Logo asistentecitas (2 segundos = 60 frames) */}

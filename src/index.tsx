@@ -8,6 +8,7 @@ import { WhatsAppCita } from "./compositions/WhatsAppCita";
 import { Cliente2Video } from "./compositions/Cliente2Video";
 import { TestVideoTemplate } from "./compositions/TestVideoTemplate";
 import { PromotionalVideo } from "./compositions/PromotionalVideo";
+import { AudioTest } from "./compositions/AudioTest";
 
 export const RemotionRoot: React.FC = () => {
   return (
@@ -86,6 +87,14 @@ export const RemotionRoot: React.FC = () => {
         id="PromotionalVideo"
         component={PromotionalVideo}
         durationInFrames={1320}
+        fps={30}
+        width={1920}
+        height={1080}
+      />
+      <Composition
+        id="AudioTest"
+        component={AudioTest}
+        durationInFrames={180}
         fps={30}
         width={1920}
         height={1080}
