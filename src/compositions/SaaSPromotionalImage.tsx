@@ -7,7 +7,7 @@ export const SaaSPromotionalImage = () => {
   return (
     <AbsoluteFill
       style={{
-        background: "#fafbfa",
+        background: "linear-gradient(135deg, #f0ffe8 0%, #f5fff0 100%)",
         fontFamily: "Sora, sans-serif",
         display: "flex",
         flexDirection: "column",
@@ -24,7 +24,7 @@ export const SaaSPromotionalImage = () => {
           left: "-200px",
           width: "600px",
           height: "600px",
-          border: "8px solid rgba(86, 255, 6, 0.2)",
+          border: "8px solid rgba(86, 255, 6, 0.5)",
           borderRadius: "50%",
           pointerEvents: "none",
         }}
@@ -36,7 +36,7 @@ export const SaaSPromotionalImage = () => {
           left: "-100px",
           width: "400px",
           height: "400px",
-          border: "5px solid rgba(86, 255, 6, 0.15)",
+          border: "5px solid rgba(86, 255, 6, 0.4)",
           borderRadius: "50%",
           pointerEvents: "none",
         }}
@@ -48,7 +48,7 @@ export const SaaSPromotionalImage = () => {
           right: "-150px",
           width: "500px",
           height: "500px",
-          border: "8px solid rgba(86, 255, 6, 0.18)",
+          border: "8px solid rgba(86, 255, 6, 0.45)",
           borderRadius: "50%",
           pointerEvents: "none",
         }}
@@ -60,7 +60,7 @@ export const SaaSPromotionalImage = () => {
           right: "-80px",
           width: "300px",
           height: "300px",
-          border: "5px solid rgba(86, 255, 6, 0.12)",
+          border: "5px solid rgba(86, 255, 6, 0.35)",
           borderRadius: "50%",
           pointerEvents: "none",
         }}
@@ -72,7 +72,7 @@ export const SaaSPromotionalImage = () => {
           right: "100px",
           width: "200px",
           height: "200px",
-          background: "radial-gradient(circle, rgba(86, 255, 6, 0.08) 0%, transparent 70%)",
+          background: "radial-gradient(circle, rgba(86, 255, 6, 0.15) 0%, transparent 70%)",
           borderRadius: "50%",
           transform: "translateY(-50%)",
           pointerEvents: "none",
@@ -85,7 +85,7 @@ export const SaaSPromotionalImage = () => {
           left: "150px",
           width: "150px",
           height: "150px",
-          background: "radial-gradient(circle, rgba(86, 255, 6, 0.06) 0%, transparent 70%)",
+          background: "radial-gradient(circle, rgba(86, 255, 6, 0.12) 0%, transparent 70%)",
           borderRadius: "50%",
           pointerEvents: "none",
         }}
@@ -118,12 +118,13 @@ export const SaaSPromotionalImage = () => {
 
           <p
             style={{
-              fontSize: "18px",
-              fontWeight: "400",
+              fontSize: "22px",
+              fontWeight: "500",
               color: "#1f2937",
-              lineHeight: "1.5",
-              maxWidth: "700px",
+              lineHeight: "1.4",
+              maxWidth: "800px",
               margin: 0,
+              whiteSpace: "nowrap",
             }}
           >
             Visualiza ingresos, citas, productos más vendidos y rendimiento de empleados en tiempo real.

@@ -1,7 +1,7 @@
 import { AbsoluteFill, useCurrentFrame, useVideoConfig, interpolate, spring, staticFile, Easing, Series } from "remotion";
 import { Audio } from "@remotion/media";
 import { loadFont } from "@remotion/google-fonts/Sora";
-import { WhatsAppCitaPromo } from "./WhatsAppCitaPromo";
+import { WhatsAppCita } from "./WhatsAppCita";
 import { CalendarComplete } from "./CalendarComplete";
 import { DashboardComplete } from "./DashboardComplete";
 
@@ -134,6 +134,8 @@ const ImaginaScene: React.FC = () => {
         overflow: "visible",
       }}
     >
+      <Audio src={staticFile("audios/imagina.mp3")} />
+
       {/* Shockwaves centrados */}
       <div style={{
         position: "absolute",
@@ -285,6 +287,7 @@ const WhatsAppScene: React.FC = () => {
 
   return (
     <AbsoluteFill style={{ backgroundColor: "white", overflow: "visible" }}>
+      <Audio src={staticFile("audios/DespreocuparteDelWhatsapp.mp3")} />
       {/* Shockwaves desde la izquierda */}
       <div style={{
         position: "absolute",
@@ -384,7 +387,7 @@ const WhatsAppScene: React.FC = () => {
           justifyContent: "center",
         }}
       >
-        <WhatsAppCitaPromo showPromoMessage={true} startFrame={whatsappStartFrame} />
+        <WhatsAppCita showPromoMessage={true} startFrame={whatsappStartFrame} />
       </div>
     </AbsoluteFill>
   );
@@ -480,6 +483,8 @@ const CalendarScene: React.FC = () => {
 
   return (
     <AbsoluteFill style={{ backgroundColor: "white", overflow: "visible" }}>
+      <Audio src={staticFile("audios/gestionartodastuscitas.mp3")} />
+
       {/* Shockwaves desde arriba */}
       <div style={{
         position: "absolute",
@@ -537,7 +542,7 @@ const CalendarScene: React.FC = () => {
             opacity: line1Opacity,
             transform: `scale(${line1Scale}) translateY(${line1Y}px)`,
           }}>
-            Gestiona{" "}
+            Gestionar{" "}
             <span style={{
               color: "#56ff06",
               fontWeight: "800",
@@ -664,6 +669,8 @@ const DashboardScene: React.FC = () => {
 
   return (
     <AbsoluteFill style={{ backgroundColor: "white", overflow: "visible" }}>
+      <Audio src={staticFile("audios/tenercontroltotaldetunegocio.mp3")} />
+
       {/* Shockwaves desde la derecha */}
       <div style={{
         position: "absolute",
@@ -891,6 +898,8 @@ const CtaScene: React.FC<{
         overflow: "visible",
       }}
     >
+      <Audio src={staticFile("audios/finavideo.mp3")} />
+
       {/* 3 Shockwaves desde abajo */}
       <div style={{
         position: "absolute",
@@ -1008,12 +1017,13 @@ export const PromotionalVideo: React.FC = () => {
   const { fps, durationInFrames } = useVideoConfig();
   const frame = useCurrentFrame();
 
+  // Bajar volumen durante voiceovers (todas las escenas tienen voiceover)
   const audioVolume = interpolate(
     frame,
-    [durationInFrames - 90, durationInFrames - 10],
-    [1, 0],
+    [0, 59, 61, 119, 569, 571, 869, 871, 1169, 1171, durationInFrames - 90, durationInFrames - 10],
+    [1, 1, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0],
     {
-      easing: Easing.out(Easing.exp),
+      easing: Easing.inOut(Easing.quad),
       extrapolateRight: "clamp",
       extrapolateLeft: "clamp",
     }
