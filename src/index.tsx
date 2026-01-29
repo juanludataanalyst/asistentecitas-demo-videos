@@ -8,13 +8,15 @@ import { WhatsAppCita } from "./compositions/WhatsAppCita";
 import { Cliente2Video } from "./compositions/Cliente2Video";
 import { TestVideoTemplate } from "./compositions/TestVideoTemplate";
 import { PromotionalVideo } from "./compositions/PromotionalVideo";
+import { TestimonialVideo } from "./compositions/TestimonialVideo";
 import { AudioTest } from "./compositions/AudioTest";
 import { SaaSPromotionalImage } from "./compositions/SaaSPromotionalImage";
-import { CalendarPromotionalImage } from "./compositions/CalendarPromotionalImage";
-import { WhatsAppPromotionalImage } from "./compositions/WhatsAppPromotionalImage";
-import { GeneralPromotionalImage } from "./compositions/GeneralPromotionalImage";
 import { CalendarScreenshotImage } from "./compositions/CalendarScreenshotImage";
 import { CalendarWhatsAppImage } from "./compositions/CalendarWhatsAppImage";
+import { DashboardWhatsAppImage } from "./compositions/DashboardWhatsAppImage";
+import { SettingsPromotionalImage } from "./compositions/SettingsPromotionalImage";
+import { LogoIntroVideo } from "./compositions/LogoIntroVideo";
+import { CtaVideo } from "./compositions/CtaVideo";
 
 export const RemotionRoot: React.FC = () => {
   return (
@@ -98,6 +100,14 @@ export const RemotionRoot: React.FC = () => {
         height={1080}
       />
       <Composition
+        id="TestimonialVideo"
+        component={TestimonialVideo}
+        durationInFrames={900}
+        fps={30}
+        width={1080}
+        height={1920}
+      />
+      <Composition
         id="AudioTest"
         component={AudioTest}
         durationInFrames={180}
@@ -108,30 +118,6 @@ export const RemotionRoot: React.FC = () => {
       <Composition
         id="SaaSPromotionalImage"
         component={SaaSPromotionalImage}
-        durationInFrames={1}
-        fps={30}
-        width={1920}
-        height={1080}
-      />
-      <Composition
-        id="CalendarPromotionalImage"
-        component={CalendarPromotionalImage}
-        durationInFrames={1}
-        fps={30}
-        width={1920}
-        height={1080}
-      />
-      <Composition
-        id="WhatsAppPromotionalImage"
-        component={WhatsAppPromotionalImage}
-        durationInFrames={1}
-        fps={30}
-        width={1920}
-        height={1080}
-      />
-      <Composition
-        id="GeneralPromotionalImage"
-        component={GeneralPromotionalImage}
         durationInFrames={1}
         fps={30}
         width={1920}
@@ -152,6 +138,38 @@ export const RemotionRoot: React.FC = () => {
         fps={30}
         width={1920}
         height={1080}
+      />
+      <Composition
+        id="DashboardWhatsAppImage"
+        component={DashboardWhatsAppImage}
+        durationInFrames={1}
+        fps={30}
+        width={1920}
+        height={1080}
+      />
+      <Composition
+        id="SettingsPromotionalImage"
+        component={SettingsPromotionalImage}
+        durationInFrames={1}
+        fps={30}
+        width={1920}
+        height={1080}
+      />
+      <Composition
+        id="LogoIntroVideo"
+        component={LogoIntroVideo}
+        durationInFrames={90}
+        fps={30}
+        width={1080}
+        height={1920}
+      />
+      <Composition
+        id="CtaVideo"
+        component={CtaVideo}
+        durationInFrames={150}
+        fps={30}
+        width={1080}
+        height={1920}
       />
     </>
   );
