@@ -13,6 +13,8 @@ import { SaaSPromotionalImage } from "./compositions/SaaSPromotionalImage";
 import { CalendarPromotionalImage } from "./compositions/CalendarPromotionalImage";
 import { WhatsAppPromotionalImage } from "./compositions/WhatsAppPromotionalImage";
 import { GeneralPromotionalImage } from "./compositions/GeneralPromotionalImage";
+import { CalendarScreenshotImage } from "./compositions/CalendarScreenshotImage";
+import { CalendarWhatsAppImage } from "./compositions/CalendarWhatsAppImage";
 
 export const RemotionRoot: React.FC = () => {
   return (
@@ -130,6 +132,22 @@ export const RemotionRoot: React.FC = () => {
       <Composition
         id="GeneralPromotionalImage"
         component={GeneralPromotionalImage}
+        durationInFrames={1}
+        fps={30}
+        width={1920}
+        height={1080}
+      />
+      <Composition
+        id="CalendarScreenshotImage"
+        component={CalendarScreenshotImage}
+        durationInFrames={1}
+        fps={30}
+        width={1920}
+        height={1080}
+      />
+      <Composition
+        id="CalendarWhatsAppImage"
+        component={CalendarWhatsAppImage}
         durationInFrames={1}
         fps={30}
         width={1920}

@@ -1,4 +1,4 @@
-import { AbsoluteFill, Series, useCurrentFrame, useVideoConfig, interpolate, spring, Sequence, staticFile } from "remotion";
+import { AbsoluteFill, useCurrentFrame, useVideoConfig, interpolate, spring, staticFile, Easing, Series } from "remotion";
 import { Audio } from "@remotion/media";
 import { loadFont } from "@remotion/google-fonts/Sora";
 import { WhatsAppCitaPromo } from "./WhatsAppCitaPromo";
@@ -19,15 +19,22 @@ const LogoOnly: React.FC<{
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
 
-  const logoSpring = spring({
+  const zoomProgress = interpolate(
     frame,
-    fps,
-    config: { damping: 200, stiffness: 100 },
-    durationInFrames: 45,
-  });
+    [0, 45],
+    [0.8, 1],
+    {
+      easing: Easing.out(Easing.cubic),
+      extrapolateRight: "clamp",
+    }
+  );
 
-  const logoOpacity = interpolate(logoSpring, [0, 1], [0, 1]);
-  const logoScale = interpolate(logoSpring, [0, 1], [0.85, 1]);
+  const logoOpacity = interpolate(
+    frame,
+    [0, 20],
+    [0, 1],
+    { extrapolateRight: "clamp" }
+  );
 
   return (
     <AbsoluteFill
@@ -46,7 +53,7 @@ const LogoOnly: React.FC<{
             width: "600px",
             height: "auto",
             opacity: logoOpacity,
-            transform: `scale(${logoScale})`,
+            transform: `scale(${zoomProgress})`,
           }}
         />
       )}
@@ -54,106 +61,65 @@ const LogoOnly: React.FC<{
   );
 };
 
-// Componente reutilizable para transiciones con logo
-const LogoTransition: React.FC<{
-  children: React.ReactNode;
-  logo?: string;
-  playSounds?: boolean;
-}> = ({ children, logo, playSounds = true }) => {
+// ESCENA 1: "imagina..." con shockwaves
+const ImaginaScene: React.FC = () => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
 
-  const textSpring = spring({
+  const explosionProgress = interpolate(
     frame,
-    fps,
-    config: { damping: 200, stiffness: 100 },
-    durationInFrames: 45,
-  });
-
-  const logoSpring = spring({
-    frame: frame - 15,
-    fps,
-    config: { damping: 200, stiffness: 100 },
-    durationInFrames: 40,
-  });
-
-  const textOpacity = interpolate(textSpring, [0, 1], [0, 1]);
-  const textScale = interpolate(textSpring, [0, 1], [0.95, 1]);
-  const textY = interpolate(textSpring, [0, 1], [20, 0]);
-
-  const logoOpacity = interpolate(logoSpring, [0, 1], [0, 1]);
-  const logoScale = interpolate(logoSpring, [0, 1], [0.85, 1]);
-
-  return (
-    <AbsoluteFill
-      style={{
-        backgroundColor: "white",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        gap: "50px",
-      }}
-    >
-      <h1
-        style={{
-          fontSize: "70px",
-          fontWeight: "bold",
-          color: "#1a1a1a",
-          fontFamily,
-          textAlign: "center",
-          opacity: textOpacity,
-          transform: `scale(${textScale}) translateY(${textY}px)`,
-        }}
-      >
-        {children}
-      </h1>
-      {logo && (
-        <img
-          src={logo}
-          style={{
-            width: "600px",
-            height: "auto",
-            opacity: logoOpacity,
-            transform: `scale(${logoScale})`,
-          }}
-        />
-      )}
-      {playSounds && (
-        <>
-          {/* <Audio src="/audios/ui_sound.mp3 /> */}
-          {/* <Sequence from={15}>
-            <Audio src="/audios/melodia_ui.mp3" />
-          </Sequence> */}
-        </>
-      )}
-    </AbsoluteFill>
+    [0, 25, 50],
+    [0, 1, 1],
+    {
+      easing: Easing.out(Easing.exp),
+      extrapolateRight: "clamp",
+    }
   );
-};
 
-// Componente para frases de texto con animación profesional palabra por palabra
-const TextSlide: React.FC<{
-  children: React.ReactNode;
-  subtitle?: React.ReactNode;
-}> = ({ children, subtitle }) => {
-  const frame = useCurrentFrame();
-  const { fps } = useVideoConfig();
-
-  const textSpring = spring({
-    frame,
-    fps,
-    config: { damping: 200, stiffness: 100 },
-    durationInFrames: 45,
-  });
-
-  const textOpacity = interpolate(textSpring, [0, 1], [0, 1]);
-  const textScale = interpolate(textSpring, [0, 1], [0.92, 1]);
-  const textY = interpolate(textSpring, [0, 1], [30, 0]);
-
-  // Glow effect animation
-  const glowIntensity = interpolate(frame, [0, 30, 60], [0, 1, 0], {
+  const textOpacity = interpolate(frame, [0, 20], [0, 1], {
     extrapolateRight: "clamp",
   });
+
+  const textScale = interpolate(explosionProgress, [0, 1], [2, 1]);
+  const textY = interpolate(explosionProgress, [0, 1], [100, 0]);
+  const textRotation = interpolate(explosionProgress, [0, 1], [-5, 0]);
+
+  // Shockwaves centrados
+  const shockwave1Scale = interpolate(
+    frame,
+    [0, 25, 50],
+    [0.5, 1.8, 2.5],
+    {
+      extrapolateRight: "clamp",
+    }
+  );
+
+  const shockwave1Opacity = interpolate(
+    frame,
+    [0, 15, 30],
+    [0.6, 0.3, 0],
+    {
+      extrapolateRight: "clamp",
+    }
+  );
+
+  const shockwave2Scale = interpolate(
+    frame,
+    [5, 30, 55],
+    [0.5, 1.8, 2.5],
+    {
+      extrapolateRight: "clamp",
+    }
+  );
+
+  const shockwave2Opacity = interpolate(
+    frame,
+    [5, 20, 35],
+    [0.5, 0.25, 0],
+    {
+      extrapolateRight: "clamp",
+    }
+  );
 
   return (
     <AbsoluteFill
@@ -165,8 +131,40 @@ const TextSlide: React.FC<{
         justifyContent: "center",
         gap: "40px",
         padding: "120px",
+        overflow: "visible",
       }}
     >
+      {/* Shockwaves centrados */}
+      <div style={{
+        position: "absolute",
+        width: "100%",
+        height: "100%",
+        borderRadius: "50%",
+        border: "8px solid #56ff06",
+        opacity: shockwave1Opacity,
+        transform: `scale(${shockwave1Scale})`,
+        top: "50%",
+        left: "50%",
+        marginLeft: "-50%",
+        marginTop: "-50%",
+        pointerEvents: "none",
+      }} />
+
+      <div style={{
+        position: "absolute",
+        width: "100%",
+        height: "100%",
+        borderRadius: "50%",
+        border: "6px solid #56ff06",
+        opacity: shockwave2Opacity,
+        transform: `scale(${shockwave2Scale})`,
+        top: "50%",
+        left: "50%",
+        marginLeft: "-50%",
+        marginTop: "-50%",
+        pointerEvents: "none",
+      }} />
+
       <h1
         style={{
           fontSize: "85px",
@@ -175,175 +173,148 @@ const TextSlide: React.FC<{
           fontFamily,
           textAlign: "center",
           opacity: textOpacity,
-          transform: `scale(${textScale}) translateY(${textY}px)`,
+          transform: `scale(${textScale}) translateY(${textY}px) rotate(${textRotation}deg)`,
           letterSpacing: "-0.03em",
-          textShadow: `0 0 ${glowIntensity * 20}px rgba(86, 255, 6, ${glowIntensity * 0.3})`,
+          position: "relative",
+          zIndex: 10,
         }}
       >
-        {children}
+        imagina...
       </h1>
-      {subtitle && (
-        <p
-          style={{
-            fontSize: "32px",
-            color: "#666",
-            fontFamily,
-            textAlign: "center",
-            opacity: textOpacity,
-            transform: `scale(${textScale}) translateY(${textY}px)`,
-          }}
-        >
-          {subtitle}
-        </p>
-      )}
     </AbsoluteFill>
   );
 };
 
-// Componente para "agenda tu demo hoy" + logo con animación secuencial
-const AgendaDemo: React.FC<{
-  logo?: string;
-}> = ({ logo }) => {
+// ESCENA 2: WhatsApp - Texto con fade profesional a componente
+const WhatsAppScene: React.FC = () => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
 
-  // Animación secuencial palabra por palabra
-  const word1Spring = spring({ frame: frame - 0, fps, config: { damping: 150, stiffness: 120 } });
-  const word2Spring = spring({ frame: frame - 10, fps, config: { damping: 150, stiffness: 120 } });
-  const word3Spring = spring({ frame: frame - 20, fps, config: { damping: 150, stiffness: 120 } });
-
-  const word1Opacity = interpolate(word1Spring, [0, 1], [0, 1]);
-  const word2Opacity = interpolate(word2Spring, [0, 1], [0, 1]);
-  const word3Opacity = interpolate(word3Spring, [0, 1], [0, 1]);
-
-  const word1Scale = interpolate(word1Spring, [0, 1], [0.85, 1]);
-  const word2Scale = interpolate(word2Spring, [0, 1], [0.85, 1]);
-  const word3Scale = interpolate(word3Spring, [0, 1], [0.85, 1]);
-
-  const word1Y = interpolate(word1Spring, [0, 1], [30, 0]);
-  const word2Y = interpolate(word2Spring, [0, 1], [30, 0]);
-  const word3Y = interpolate(word3Spring, [0, 1], [30, 0]);
-
-  const logoSpring = spring({
-    frame: frame - 30,
+  const line1Spring = spring({
+    frame: frame - 0,
     fps,
-    config: { damping: 200, stiffness: 100 },
-    durationInFrames: 40,
+    config: { damping: 10, stiffness: 200, mass: 1.5 },
   });
 
-  const logoOpacity = interpolate(logoSpring, [0, 1], [0, 1]);
-  const logoScale = interpolate(logoSpring, [0, 1], [0.85, 1]);
-
-  // Glow animation persistente
-  const glowPulse = interpolate(frame, [10, 50, 90], [0, 1, 0.7], {
-    extrapolateRight: "clamp",
+  const line2Spring = spring({
+    frame: frame - 12,
+    fps,
+    config: { damping: 10, stiffness: 200, mass: 1.5 },
   });
-
-  return (
-    <AbsoluteFill
-      style={{
-        backgroundColor: "white",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        gap: "70px",
-      }}
-    >
-      <h1
-        style={{
-          fontSize: "105px",
-          fontWeight: "bold",
-          color: "#1a1a1a",
-          fontFamily,
-          textAlign: "center",
-          letterSpacing: "-0.04em",
-          lineHeight: "1.2",
-        }}
-      >
-        <span style={{
-          opacity: word1Opacity,
-          transform: `scale(${word1Scale}) translateY(${word1Y}px)`,
-          display: "inline-block",
-        }}>
-          Pide tu
-        </span>{" "}
-        <span style={{
-          opacity: word2Opacity,
-          transform: `scale(${word2Scale}) translateY(${word2Y}px)`,
-          display: "inline-block",
-          color: "#56ff06",
-          textShadow: `0 0 ${glowPulse * 35}px rgba(86, 255, 6, ${glowPulse * 0.5})`,
-          fontWeight: "800",
-        }}>
-          demo
-        </span>{" "}
-        <span style={{
-          opacity: word3Opacity,
-          transform: `scale(${word3Scale}) translateY(${word3Y}px)`,
-          display: "inline-block",
-        }}>
-          hoy
-        </span>
-      </h1>
-      {logo && (
-        <img
-          src={logo}
-          style={{
-            width: "700px",
-            height: "auto",
-            opacity: logoOpacity,
-            transform: `scale(${logoScale})`,
-          }}
-        />
-      )}
-    </AbsoluteFill>
-  );
-};
-
-// Componente para WhatsApp + texto con animación secuencial profesional
-const WhatsAppWithText: React.FC = () => {
-  const frame = useCurrentFrame();
-  const { fps } = useVideoConfig();
-
-  // Fase 1: Texto aparece (frames 0-90)
-  // Fase 2: WhatsApp aparece (frames 90-450)
-
-  // Animación secuencial por línea
-  const line1Spring = spring({ frame: frame - 0, fps, config: { damping: 150, stiffness: 120 } });
-  const line2Spring = spring({ frame: frame - 15, fps, config: { damping: 150, stiffness: 120 } });
 
   const line1Opacity = interpolate(line1Spring, [0, 1], [0, 1]);
   const line2Opacity = interpolate(line2Spring, [0, 1], [0, 1]);
 
-  const line1Scale = interpolate(line1Spring, [0, 1], [0.85, 1]);
-  const line2Scale = interpolate(line2Spring, [0, 1], [0.85, 1]);
+  const line1Scale = interpolate(line1Spring, [0, 1], [0.7, 1]);
+  const line2Scale = interpolate(line2Spring, [0, 1], [0.7, 1]);
 
-  const line1Y = interpolate(line1Spring, [0, 1], [30, 0]);
-  const line2Y = interpolate(line2Spring, [0, 1], [30, 0]);
+  const line1Y = interpolate(line1Spring, [0, 1], [50, 0]);
+  const line2Y = interpolate(line2Spring, [0, 1], [50, 0]);
 
-  // Fade out del texto completo
-  const textFadeOut = interpolate(frame, [75, 90, 105], [1, 1, 0], {
-    extrapolateRight: "clamp",
-  });
+  // Texto se desvanece profesionalmente
+  const textFadeOut = interpolate(
+    frame,
+    [75, 90, 105],
+    [1, 1, 0],
+    {
+      easing: Easing.in(Easing.cubic),
+      extrapolateRight: "clamp",
+    }
+  );
 
-  // Glow animations con timing escalonado
-  const glow1 = interpolate(frame, [15, 45, 75], [0, 1, 0.4], { extrapolateRight: "clamp" });
-  const glow2 = interpolate(frame, [30, 60, 90], [0, 1, 0.4], { extrapolateRight: "clamp" });
+  // Shockwaves desde la izquierda
+  const shockwave1Scale = interpolate(
+    frame,
+    [0, 25, 50],
+    [0.4, 1.5, 2.2],
+    {
+      extrapolateRight: "clamp",
+    }
+  );
 
-  // WhatsApp aparece y crece
-  const whatsappScale = interpolate(frame, [90, 150], [0.3, 1.15], {
-    extrapolateRight: "clamp",
-  });
-  const whatsappOpacity = interpolate(frame, [90, 120], [0, 1], {
-    extrapolateRight: "clamp",
-  });
+  const shockwave1Opacity = interpolate(
+    frame,
+    [0, 20, 35],
+    [0.6, 0.3, 0],
+    {
+      extrapolateRight: "clamp",
+    }
+  );
 
-  const whatsappStartFrame = 150;
+  const shockwave2Scale = interpolate(
+    frame,
+    [8, 33, 58],
+    [0.4, 1.5, 2.2],
+    {
+      extrapolateRight: "clamp",
+    }
+  );
+
+  const shockwave2Opacity = interpolate(
+    frame,
+    [8, 28, 43],
+    [0.5, 0.25, 0],
+    {
+      extrapolateRight: "clamp",
+    }
+  );
+
+  // WhatsApp aparece DURANTE el fade del texto (transición profesional)
+  const whatsappProgress = interpolate(
+    frame,
+    [95, 155],
+    [0, 1],
+    {
+      easing: Easing.out(Easing.exp),
+      extrapolateRight: "clamp",
+    }
+  );
+
+  const whatsappScale = interpolate(whatsappProgress, [0, 1], [0.1, 1.15]);
+  const whatsappOpacity = interpolate(
+    frame,
+    [95, 125],
+    [0, 1],
+    {
+      easing: Easing.out(Easing.cubic),
+      extrapolateRight: "clamp",
+    }
+  );
+
+  const whatsappStartFrame = 160;
 
   return (
-    <AbsoluteFill style={{ backgroundColor: "white" }}>
-      {/* Texto con animación secuencial */}
+    <AbsoluteFill style={{ backgroundColor: "white", overflow: "visible" }}>
+      {/* Shockwaves desde la izquierda */}
+      <div style={{
+        position: "absolute",
+        width: "100%",
+        height: "80%",
+        borderRadius: "50%",
+        border: "8px solid #56ff06",
+        opacity: shockwave1Opacity,
+        transform: `scale(${shockwave1Scale})`,
+        top: "50%",
+        left: "-20%",
+        marginTop: "-40%",
+        pointerEvents: "none",
+      }} />
+
+      <div style={{
+        position: "absolute",
+        width: "95%",
+        height: "75%",
+        borderRadius: "50%",
+        border: "6px solid #56ff06",
+        opacity: shockwave2Opacity,
+        transform: `scale(${shockwave2Scale})`,
+        top: "50%",
+        left: "-15%",
+        marginTop: "-37.5%",
+        pointerEvents: "none",
+      }} />
+
+      {/* Texto que desaparece profesionalmente */}
       <div
         style={{
           position: "absolute",
@@ -352,6 +323,7 @@ const WhatsAppWithText: React.FC = () => {
           transform: "translate(-50%, -50%)",
           textAlign: "center",
           zIndex: 10,
+          opacity: textFadeOut,
         }}
       >
         <h1
@@ -368,39 +340,36 @@ const WhatsAppWithText: React.FC = () => {
             display: "block",
             marginBottom: "20px",
             fontSize: "64px",
-            opacity: line1Opacity * textFadeOut,
+            opacity: line1Opacity,
             transform: `scale(${line1Scale}) translateY(${line1Y}px)`,
           }}>
             Despreocúparte del{" "}
             <span style={{
               color: "#56ff06",
-              textShadow: `0 0 ${glow1 * 35}px rgba(86, 255, 6, ${glow1 * 0.5})`,
               fontWeight: "800",
             }}>WhatsApp</span>
           </span>
           <span style={{
             display: "block",
             fontSize: "58px",
-            opacity: line2Opacity * textFadeOut,
+            opacity: line2Opacity,
             transform: `scale(${line2Scale}) translateY(${line2Y}px)`,
           }}>
             y que una{" "}
             <span style={{
               color: "#56ff06",
-              textShadow: `0 0 ${glow2 * 35}px rgba(86, 255, 6, ${glow2 * 0.5})`,
               fontWeight: "800",
             }}>IA</span>{" "}
             responda por ti{" "}
             <span style={{
               color: "#56ff06",
-              textShadow: `0 0 ${glow2 * 35}px rgba(86, 255, 6, ${glow2 * 0.5})`,
               fontWeight: "800",
-            }}>24/7</span>
+            }}>{"24/7"}</span>
           </span>
         </h1>
       </div>
 
-      {/* WhatsApp que aparece y crece en el centro */}
+      {/* WhatsApp que aparece durante la transición */}
       <div
         style={{
           position: "absolute",
@@ -421,40 +390,126 @@ const WhatsAppWithText: React.FC = () => {
   );
 };
 
-// Componente para Calendario + texto con animación secuencial
-const CalendarWithText: React.FC = () => {
+// ESCENA 3: Calendario - Texto + Componente sin gap
+const CalendarScene: React.FC = () => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
 
-  // Animación secuencial por línea
-  const line1Spring = spring({ frame: frame - 0, fps, config: { damping: 150, stiffness: 120 } });
-  const line2Spring = spring({ frame: frame - 12, fps, config: { damping: 150, stiffness: 120 } });
+  const line1Spring = spring({
+    frame: frame - 0,
+    fps,
+    config: { damping: 10, stiffness: 200, mass: 1.5 },
+  });
+
+  const line2Spring = spring({
+    frame: frame - 10,
+    fps,
+    config: { damping: 10, stiffness: 200, mass: 1.5 },
+  });
 
   const line1Opacity = interpolate(line1Spring, [0, 1], [0, 1]);
   const line2Opacity = interpolate(line2Spring, [0, 1], [0, 1]);
 
-  const line1Scale = interpolate(line1Spring, [0, 1], [0.85, 1]);
-  const line2Scale = interpolate(line2Spring, [0, 1], [0.85, 1]);
+  const line1Scale = interpolate(line1Spring, [0, 1], [0.7, 1]);
+  const line2Scale = interpolate(line2Spring, [0, 1], [0.7, 1]);
 
-  const line1Y = interpolate(line1Spring, [0, 1], [30, 0]);
-  const line2Y = interpolate(line2Spring, [0, 1], [30, 0]);
+  const line1Y = interpolate(line1Spring, [0, 1], [50, 0]);
+  const line2Y = interpolate(line2Spring, [0, 1], [50, 0]);
 
-  // Fade out del texto
-  const textFadeOut = interpolate(frame, [75, 90], [1, 0], {
-    extrapolateRight: "clamp",
-  });
+  // Texto se desvanece frames 40-52
+  const textFadeOut = interpolate(
+    frame,
+    [40, 47, 52],
+    [1, 1, 0],
+    {
+      easing: Easing.in(Easing.cubic),
+      extrapolateRight: "clamp",
+    }
+  );
 
-  // Glow animations escalonadas
-  const glow1 = interpolate(frame, [12, 42, 75], [0, 1, 0.4], { extrapolateRight: "clamp" });
-  const glow2 = interpolate(frame, [24, 54, 75], [0, 1, 0.4], { extrapolateRight: "clamp" });
+  // Shockwaves desde arriba
+  const shockwave1Scale = interpolate(
+    frame,
+    [0, 25, 50],
+    [0.4, 1.6, 2.3],
+    {
+      extrapolateRight: "clamp",
+    }
+  );
 
-  const calendarScale = 0.95;
-  const calendarOpacity = 1;
-  const calendarStartFrame = 90;
+  const shockwave1Opacity = interpolate(
+    frame,
+    [0, 20, 40],
+    [0.5, 0.25, 0],
+    {
+      extrapolateRight: "clamp",
+    }
+  );
+
+  const shockwave2Scale = interpolate(
+    frame,
+    [10, 35, 60],
+    [0.4, 1.6, 2.3],
+    {
+      extrapolateRight: "clamp",
+    }
+  );
+
+  const shockwave2Opacity = interpolate(
+    frame,
+    [10, 30, 50],
+    [0.4, 0.2, 0],
+    {
+      extrapolateRight: "clamp",
+    }
+  );
+
+  // Calendario VISIBLE desde frame 52 (cuando termina el texto)
+  const calendarScale = interpolate(
+    frame,
+    [52, 112],
+    [0.85, 0.95],
+    {
+      easing: Easing.out(Easing.exp),
+      extrapolateRight: "clamp",
+      extrapolateLeft: "clamp",
+    }
+  );
+
+  const calendarStartFrame = 60;
 
   return (
-    <AbsoluteFill style={{ backgroundColor: "white" }}>
-      {/* Texto con animación secuencial */}
+    <AbsoluteFill style={{ backgroundColor: "white", overflow: "visible" }}>
+      {/* Shockwaves desde arriba */}
+      <div style={{
+        position: "absolute",
+        width: "80%",
+        height: "80%",
+        borderRadius: "50%",
+        border: "7px solid #56ff06",
+        opacity: shockwave1Opacity,
+        transform: `scale(${shockwave1Scale})`,
+        top: "-20%",
+        left: "50%",
+        marginLeft: "-40%",
+        pointerEvents: "none",
+      }} />
+
+      <div style={{
+        position: "absolute",
+        width: "85%",
+        height: "85%",
+        borderRadius: "50%",
+        border: "5px solid #56ff06",
+        opacity: shockwave2Opacity,
+        transform: `scale(${shockwave2Scale})`,
+        top: "-15%",
+        left: "50%",
+        marginLeft: "-42.5%",
+        pointerEvents: "none",
+      }} />
+
+      {/* Texto que desaparece */}
       <div
         style={{
           position: "absolute",
@@ -463,6 +518,7 @@ const CalendarWithText: React.FC = () => {
           transform: "translate(-50%, -50%)",
           textAlign: "center",
           zIndex: 10,
+          opacity: textFadeOut,
         }}
       >
         <h1
@@ -478,39 +534,36 @@ const CalendarWithText: React.FC = () => {
           <span style={{
             display: "block",
             marginBottom: "15px",
-            opacity: line1Opacity * textFadeOut,
+            opacity: line1Opacity,
             transform: `scale(${line1Scale}) translateY(${line1Y}px)`,
           }}>
             Gestiona{" "}
             <span style={{
               color: "#56ff06",
-              textShadow: `0 0 ${glow1 * 35}px rgba(86, 255, 6, ${glow1 * 0.5})`,
               fontWeight: "800",
             }}>todas tus citas</span>
           </span>
           <span style={{
             fontSize: "65px",
-            opacity: line2Opacity * textFadeOut,
+            opacity: line2Opacity,
             transform: `scale(${line2Scale}) translateY(${line2Y}px)`,
           }}>
             desde un{" "}
             <span style={{
               color: "#56ff06",
-              textShadow: `0 0 ${glow2 * 35}px rgba(86, 255, 6, ${glow2 * 0.5})`,
               fontWeight: "800",
-            }}>calendario inteligente</span>
+            }}>{"calendario inteligente"}</span>
           </span>
         </h1>
       </div>
 
-      {/* Calendario */}
+      {/* Calendario visible desde frame 52 (sin gap) */}
       <div
         style={{
           position: "absolute",
           top: "50%",
           left: "50%",
           transform: `translate(-50%, -50%) scale(${calendarScale})`,
-          opacity: calendarOpacity,
           width: "100%",
           height: "100%",
         }}
@@ -521,40 +574,126 @@ const CalendarWithText: React.FC = () => {
   );
 };
 
-// Componente para Dashboard + texto con animación secuencial
-const DashboardWithText: React.FC = () => {
+// ESCENA 4: Dashboard - Texto con fade profesional a componente
+const DashboardScene: React.FC = () => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
 
-  // Animación secuencial por línea
-  const line1Spring = spring({ frame: frame - 0, fps, config: { damping: 150, stiffness: 120 } });
-  const line2Spring = spring({ frame: frame - 12, fps, config: { damping: 150, stiffness: 120 } });
+  const line1Spring = spring({
+    frame: frame - 0,
+    fps,
+    config: { damping: 10, stiffness: 200, mass: 1.5 },
+  });
+
+  const line2Spring = spring({
+    frame: frame - 10,
+    fps,
+    config: { damping: 10, stiffness: 200, mass: 1.5 },
+  });
 
   const line1Opacity = interpolate(line1Spring, [0, 1], [0, 1]);
   const line2Opacity = interpolate(line2Spring, [0, 1], [0, 1]);
 
-  const line1Scale = interpolate(line1Spring, [0, 1], [0.85, 1]);
-  const line2Scale = interpolate(line2Spring, [0, 1], [0.85, 1]);
+  const line1Scale = interpolate(line1Spring, [0, 1], [0.7, 1]);
+  const line2Scale = interpolate(line2Spring, [0, 1], [0.7, 1]);
 
-  const line1Y = interpolate(line1Spring, [0, 1], [30, 0]);
-  const line2Y = interpolate(line2Spring, [0, 1], [30, 0]);
+  const line1Y = interpolate(line1Spring, [0, 1], [50, 0]);
+  const line2Y = interpolate(line2Spring, [0, 1], [50, 0]);
 
-  // Fade out del texto
-  const textFadeOut = interpolate(frame, [75, 90], [1, 0], {
-    extrapolateRight: "clamp",
-  });
+  // Texto se desvanece frames 40-52
+  const textFadeOut = interpolate(
+    frame,
+    [40, 47, 52],
+    [1, 1, 0],
+    {
+      easing: Easing.in(Easing.cubic),
+      extrapolateRight: "clamp",
+    }
+  );
 
-  // Glow animations escalonadas
-  const glow1 = interpolate(frame, [12, 42, 75], [0, 1, 0.4], { extrapolateRight: "clamp" });
-  const glow2 = interpolate(frame, [24, 54, 75], [0, 1, 0.4], { extrapolateRight: "clamp" });
+  // Shockwaves desde la derecha
+  const shockwave1Scale = interpolate(
+    frame,
+    [0, 25, 50],
+    [0.4, 1.5, 2.2],
+    {
+      extrapolateRight: "clamp",
+    }
+  );
 
-  const dashboardScale = 0.85;
-  const dashboardOpacity = 1;
-  const dashboardStartFrame = 90;
+  const shockwave1Opacity = interpolate(
+    frame,
+    [0, 20, 35],
+    [0.6, 0.3, 0],
+    {
+      extrapolateRight: "clamp",
+    }
+  );
+
+  const shockwave2Scale = interpolate(
+    frame,
+    [8, 33, 58],
+    [0.4, 1.5, 2.2],
+    {
+      extrapolateRight: "clamp",
+    }
+  );
+
+  const shockwave2Opacity = interpolate(
+    frame,
+    [8, 28, 43],
+    [0.5, 0.25, 0],
+    {
+      extrapolateRight: "clamp",
+    }
+  );
+
+  // Dashboard VISIBLE desde frame 52 (cuando termina el texto)
+  const dashboardScale = interpolate(
+    frame,
+    [52, 112],
+    [0.80, 0.85],
+    {
+      easing: Easing.out(Easing.exp),
+      extrapolateRight: "clamp",
+      extrapolateLeft: "clamp",
+    }
+  );
+
+  const dashboardStartFrame = 60;
 
   return (
-    <AbsoluteFill style={{ backgroundColor: "white" }}>
-      {/* Texto con animación secuencial */}
+    <AbsoluteFill style={{ backgroundColor: "white", overflow: "visible" }}>
+      {/* Shockwaves desde la derecha */}
+      <div style={{
+        position: "absolute",
+        width: "100%",
+        height: "80%",
+        borderRadius: "50%",
+        border: "8px solid #56ff06",
+        opacity: shockwave1Opacity,
+        transform: `scale(${shockwave1Scale})`,
+        top: "50%",
+        right: "-20%",
+        marginTop: "-40%",
+        pointerEvents: "none",
+      }} />
+
+      <div style={{
+        position: "absolute",
+        width: "95%",
+        height: "75%",
+        borderRadius: "50%",
+        border: "6px solid #56ff06",
+        opacity: shockwave2Opacity,
+        transform: `scale(${shockwave2Scale})`,
+        top: "50%",
+        right: "-15%",
+        marginTop: "-37.5%",
+        pointerEvents: "none",
+      }} />
+
+      {/* Texto que desaparece profesionalmente */}
       <div
         style={{
           position: "absolute",
@@ -563,6 +702,7 @@ const DashboardWithText: React.FC = () => {
           transform: "translate(-50%, -50%)",
           textAlign: "center",
           zIndex: 10,
+          opacity: textFadeOut,
         }}
       >
         <h1
@@ -578,39 +718,36 @@ const DashboardWithText: React.FC = () => {
           <span style={{
             display: "block",
             marginBottom: "15px",
-            opacity: line1Opacity * textFadeOut,
+            opacity: line1Opacity,
             transform: `scale(${line1Scale}) translateY(${line1Y}px)`,
           }}>
             <span style={{
               color: "#56ff06",
-              textShadow: `0 0 ${glow1 * 35}px rgba(86, 255, 6, ${glow1 * 0.5})`,
               fontWeight: "800",
             }}>Control total</span>{" "}
             de tu negocio
           </span>
           <span style={{
             fontSize: "68px",
-            opacity: line2Opacity * textFadeOut,
+            opacity: line2Opacity,
             transform: `scale(${line2Scale}) translateY(${line2Y}px)`,
           }}>
             con{" "}
             <span style={{
               color: "#56ff06",
-              textShadow: `0 0 ${glow2 * 35}px rgba(86, 255, 6, ${glow2 * 0.5})`,
               fontWeight: "800",
-            }}>métricas en tiempo real</span>
+            }}>{"métricas en tiempo real"}</span>
           </span>
         </h1>
       </div>
 
-      {/* Dashboard */}
+      {/* Dashboard visible desde frame 52 (sin gap) */}
       <div
         style={{
           position: "absolute",
           top: "50%",
           left: "50%",
           transform: `translate(-50%, -50%) scale(${dashboardScale})`,
-          opacity: dashboardOpacity,
           width: "100%",
           height: "100%",
         }}
@@ -621,58 +758,300 @@ const DashboardWithText: React.FC = () => {
   );
 };
 
-export const PromotionalVideo = () => {
+// ESCENA 5: "Pide tu demo hoy"
+const CtaScene: React.FC<{
+  logo?: string;
+}> = ({ logo }) => {
+  const frame = useCurrentFrame();
+  const { fps } = useVideoConfig();
+
+  const word1Spring = spring({
+    frame: frame - 0,
+    fps,
+    config: { damping: 8, stiffness: 200, mass: 2 },
+  });
+
+  const word2Spring = spring({
+    frame: frame - 8,
+    fps,
+    config: { damping: 8, stiffness: 200, mass: 2 },
+  });
+
+  const word3Spring = spring({
+    frame: frame - 16,
+    fps,
+    config: { damping: 8, stiffness: 200, mass: 2 },
+  });
+
+  const word1Scale = interpolate(word1Spring, [0, 1], [3, 1]);
+  const word2Scale = interpolate(word2Spring, [0, 1], [4, 1]);
+  const word3Scale = interpolate(word3Spring, [0, 1], [3, 1]);
+
+  const word1Y = interpolate(word1Spring, [0, 1], [100, 0]);
+  const word2Y = interpolate(word2Spring, [0, 1], [150, 0]);
+  const word3Y = interpolate(word3Spring, [0, 1], [100, 0]);
+
+  const logoSpring = spring({
+    frame: frame - 25,
+    fps,
+    config: { damping: 12, stiffness: 150, mass: 1.5 },
+  });
+
+  const logoScale = interpolate(logoSpring, [0, 1], [0.5, 1]);
+  const logoOpacity = interpolate(
+    frame,
+    [25, 40],
+    [0, 1],
+    { extrapolateRight: "clamp" }
+  );
+
+  // Confetti
+  const confettiCount = 20;
+  const confetti = Array.from({ length: confettiCount }, (_, i) => {
+    const delay = i * 2;
+    const confettiFrame = frame - delay;
+    const progress = interpolate(confettiFrame, [0, 60], [0, 1], {
+      extrapolateRight: "clamp",
+    });
+
+    const x = interpolate(progress, [0, 1], [50, 50 + Math.sin(i) * 40]);
+    const y = interpolate(progress, [0, 1], [50, 50 + Math.cos(i) * 30 + progress * 20]);
+    const rotation = interpolate(progress, [0, 1], [0, 360]);
+    const opacity = interpolate(progress, [0, 0.3, 1], [0, 1, 0], {
+      extrapolateRight: "clamp",
+    });
+
+    return { x, y, rotation, opacity, delay };
+  });
+
+  // 3 Shockwaves desde abajo
+  const shockwave1Scale = interpolate(
+    frame,
+    [0, 30, 60],
+    [0.3, 1.6, 2.5],
+    {
+      extrapolateRight: "clamp",
+    }
+  );
+
+  const shockwave1Opacity = interpolate(
+    frame,
+    [0, 25, 45],
+    [0.7, 0.3, 0],
+    {
+      extrapolateRight: "clamp",
+    }
+  );
+
+  const shockwave2Scale = interpolate(
+    frame,
+    [5, 35, 65],
+    [0.3, 1.6, 2.5],
+    {
+      extrapolateRight: "clamp",
+    }
+  );
+
+  const shockwave2Opacity = interpolate(
+    frame,
+    [5, 30, 50],
+    [0.6, 0.25, 0],
+    {
+      extrapolateRight: "clamp",
+    }
+  );
+
+  const shockwave3Scale = interpolate(
+    frame,
+    [10, 40, 70],
+    [0.3, 1.6, 2.5],
+    {
+      extrapolateRight: "clamp",
+    }
+  );
+
+  const shockwave3Opacity = interpolate(
+    frame,
+    [10, 35, 55],
+    [0.5, 0.2, 0],
+    {
+      extrapolateRight: "clamp",
+    }
+  );
+
+  return (
+    <AbsoluteFill
+      style={{
+        backgroundColor: "white",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        gap: "70px",
+        overflow: "visible",
+      }}
+    >
+      {/* 3 Shockwaves desde abajo */}
+      <div style={{
+        position: "absolute",
+        width: "100%",
+        height: "100%",
+        borderRadius: "50%",
+        border: "10px solid #56ff06",
+        opacity: shockwave1Opacity,
+        transform: `scale(${shockwave1Scale})`,
+        bottom: "-30%",
+        left: "50%",
+        marginLeft: "-50%",
+        pointerEvents: "none",
+      }} />
+
+      <div style={{
+        position: "absolute",
+        width: "95%",
+        height: "95%",
+        borderRadius: "50%",
+        border: "8px solid #56ff06",
+        opacity: shockwave2Opacity,
+        transform: `scale(${shockwave2Scale})`,
+        bottom: "-25%",
+        left: "50%",
+        marginLeft: "-47.5%",
+        pointerEvents: "none",
+      }} />
+
+      <div style={{
+        position: "absolute",
+        width: "90%",
+        height: "90%",
+        borderRadius: "50%",
+        border: "6px solid #56ff06",
+        opacity: shockwave3Opacity,
+        transform: `scale(${shockwave3Scale})`,
+        bottom: "-20%",
+        left: "50%",
+        marginLeft: "-45%",
+        pointerEvents: "none",
+      }} />
+
+      {/* Confetti */}
+      {confetti.map((c, i) => (
+        <div
+          key={i}
+          style={{
+            position: "absolute",
+            left: `${c.x}%`,
+            top: `${c.y}%`,
+            width: "12px",
+            height: "12px",
+            backgroundColor: i % 2 === 0 ? "#56ff06" : "#1a1a1a",
+            opacity: c.opacity,
+            transform: `rotate(${c.rotation}deg)`,
+            borderRadius: i % 3 === 0 ? "50%" : "0",
+          }}
+        />
+      ))}
+
+      <h1
+        style={{
+          fontSize: "105px",
+          fontWeight: "bold",
+          color: "#1a1a1a",
+          fontFamily,
+          textAlign: "center",
+          letterSpacing: "-0.04em",
+          lineHeight: "1.2",
+          position: "relative",
+          zIndex: 10,
+        }}
+      >
+        <span style={{
+          transform: `scale(${word1Scale}) translateY(${word1Y}px)`,
+          display: "inline-block",
+        }}>
+          Pide tu
+        </span>{" "}
+        <span style={{
+          transform: `scale(${word2Scale}) translateY(${word2Y}px)`,
+          display: "inline-block",
+          color: "#56ff06",
+          fontWeight: "800",
+        }}>
+          demo
+        </span>{" "}
+        <span style={{
+          transform: `scale(${word3Scale}) translateY(${word3Y}px)`,
+          display: "inline-block",
+        }}>
+          hoy
+        </span>
+      </h1>
+
+      {logo && (
+        <img
+          src={logo}
+          style={{
+            width: "700px",
+            height: "auto",
+            opacity: logoOpacity,
+            transform: `scale(${logoScale})`,
+            position: "relative",
+            zIndex: 10,
+          }}
+        />
+      )}
+    </AbsoluteFill>
+  );
+};
+
+export const PromotionalVideo: React.FC = () => {
   const { fps, durationInFrames } = useVideoConfig();
   const frame = useCurrentFrame();
 
-  // Fade out del audio en los últimos 3 segundos (90 frames)
   const audioVolume = interpolate(
     frame,
     [durationInFrames - 90, durationInFrames - 10],
     [1, 0],
-    { extrapolateRight: "clamp", extrapolateLeft: "clamp" }
+    {
+      easing: Easing.out(Easing.exp),
+      extrapolateRight: "clamp",
+      extrapolateLeft: "clamp",
+    }
   );
 
   return (
     <AbsoluteFill style={{ backgroundColor: "white" }}>
-      {/* Música de fondo durante todo el video con fade out */}
       <Audio src={staticFile("audios/summer-time.mp3")} volume={audioVolume} />
 
       <Series>
-        {/* 1. INTRO: Logo asistentecitas (2 segundos = 60 frames) */}
+        {/* 1. Logo: 0-60 frames */}
         <Series.Sequence durationInFrames={60}>
-          <AbsoluteFill>
-            <LogoOnly logo={logoUrl} />
-          </AbsoluteFill>
+          <LogoOnly logo={logoUrl} />
         </Series.Sequence>
 
-        {/* 2. "imagina" (2 segundos = 60 frames) */}
+        {/* 2. "imagina": 60-120 frames */}
         <Series.Sequence durationInFrames={60}>
-          <TextSlide>
-            imagina...
-          </TextSlide>
+          <ImaginaScene />
         </Series.Sequence>
 
-        {/* 3. WhatsApp + texto (16 segundos = 480 frames) */}
-        <Series.Sequence durationInFrames={480}>
-          <WhatsAppWithText />
+        {/* 3. WhatsApp (texto + componente): 120-570 frames */}
+        <Series.Sequence durationInFrames={450}>
+          <WhatsAppScene />
         </Series.Sequence>
 
-        {/* 4. "y apuntándolo todo aquí..." + Calendario (10 segundos = 300 frames) */}
+        {/* 4. Calendar (texto + componente): 570-870 frames */}
         <Series.Sequence durationInFrames={300}>
-          <CalendarWithText />
+          <CalendarScene />
         </Series.Sequence>
 
-        {/* 5. "Llevar el control..." + Dashboard (10 segundos = 300 frames) */}
+        {/* 5. Dashboard (texto + componente): 870-1170 frames */}
         <Series.Sequence durationInFrames={300}>
-          <DashboardWithText />
+          <DashboardScene />
         </Series.Sequence>
 
-        {/* 6. Outro: "agenda tu demo hoy" + logo (4 segundos = 120 frames) */}
-        <Series.Sequence durationInFrames={120}>
-          <AbsoluteFill>
-            <AgendaDemo logo={logoUrl} />
-          </AbsoluteFill>
+        {/* 6. CTA "Pide tu demo hoy": 1170-1350 frames */}
+        <Series.Sequence durationInFrames={180}>
+          <CtaScene logo={logoUrl} />
         </Series.Sequence>
       </Series>
     </AbsoluteFill>
